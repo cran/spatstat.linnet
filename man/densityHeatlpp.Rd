@@ -1,14 +1,15 @@
-\name{densityHeat}
-\alias{densityHeat}
+\name{densityHeatlpp}
+\alias{densityHeatlpp}
 \title{
   Kernel Density on a Network using Heat Equation
 }
 \description{
-  Computes a kernel density estimate on a linear network
-  using the heat equation.
+  Given a point pattern on a linear network,
+  compute a kernel estimate of intensity,
+  by solving the heat equation.
 }
 \usage{
-  densityHeat(x, sigma, \dots,
+  densityHeatlpp(x, sigma, \dots,
               at=c("pixels", "points"), leaveoneout=TRUE,
               weights = NULL,
               dx = NULL, dt = NULL, iterMax = 1e+06,
@@ -69,7 +70,7 @@
   If \code{at="points"} the result is a numeric vector giving the
   density estimates at the data points of \code{x}. 
 
-  Smoothing is performed using the
+  The smoothing operation is equivalent to the
   \dQuote{equal-split continuous} rule described in
   Section 9.2.3 of Okabe and Sugihara (2012).
   However, the actual computation is performed rapidly, by solving the classical
@@ -154,10 +155,10 @@
 }
 \examples{
   X <- runiflpp(3, simplenet)
-  D <- densityHeat(X, 0.2)
+  D <- densityHeatlpp(X, 0.2)
   plot(D, style="w", main="", adjust=2)
-  densityHeat(X, 0.2, at="points")
-  Dw <- densityHeat(X, 0.2, weights=c(1,2,-1))
+  densityHeatlpp(X, 0.2, at="points")
+  Dw <- densityHeatlpp(X, 0.2, weights=c(1,2,-1))
 }
 \keyword{spatial}
 \keyword{methods}

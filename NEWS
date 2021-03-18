@@ -1,4 +1,52 @@
 
+        CHANGES IN spatstat.linnet VERSION 2.0-0
+
+OVERVIEW
+
+    o We thank Andrea Gilardi for contributions.
+
+    o Function renamed.
+    
+    o Bug fix in density.lpp
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o densityHeat
+    'densityHeat' has been temporarily renamed 'densityHeatlpp',
+    to prevent errors in the package checking process.
+
+BUG FIXES
+
+    o density.lpp
+    Crashed if 'weights' were given and 'x' contained duplicated points.
+    [Spotted by Andrea Gilardi]
+    Fixed.
+
+        CHANGES IN spatstat.linnet VERSION 1.65-9
+
+OVERVIEW
+
+    o Minor internal changes.
+
+        CHANGES IN spatstat.linnet VERSION 1.65-8
+
+OVERVIEW
+
+    o Function renamed.
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o densityHeat
+    'densityHeat' has been renamed 'densityHeat.lpp'.
+
+
+        CHANGES IN spatstat.linnet VERSION 1.65-7
+
+OVERVIEW
+
+    o Tweaks to satisfy CRAN.
+
+
         CHANGES IN spatstat.linnet VERSION 1.65-1
 
 OVERVIEW

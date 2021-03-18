@@ -22,8 +22,11 @@ density.lpp <- function(x, sigma=NULL, ...,
   uniek <- (um == ii)
   if(!all(uniek)) {
     x <- x[uniek]
-    m <- as.numeric(table(um))
-    weights <- if(is.null(weights)) m else m * weights
+    weights <- if(is.null(weights)) {
+                 as.numeric(table(um))
+               } else {
+                 tapplysum(weights, list(factor(um)))
+               }
   }
     
   if(distance == "euclidean") {
@@ -35,7 +38,7 @@ density.lpp <- function(x, sigma=NULL, ...,
   kernel <- match.kernel(kernel)
   if(continuous && (kernel == "gaussian")) {
     #' equal-split continuous with Gaussian kernel: use heat equation
-    return(densityHeat(x, sigma, ..., weights=weights))
+    return(densityHeatlpp(x, sigma, ..., weights=weights))
   }
 
   ##' Okabe-Sugihara equal-split method
@@ -205,7 +208,8 @@ densityEqualSplit <- function(x, sigma=NULL, ...,
                      stack)
       if(sortgen)
         stack <- stack[order(stack$generation), , drop=FALSE]
-      print(stack)
+      if(verbose)
+        print(stack)
     }
   }
   # attach values to nearest pixels
@@ -220,11 +224,11 @@ densityEqualSplit <- function(x, sigma=NULL, ...,
   return(out)
 }
 
-densityHeat <- function(x, sigma, ...,
-                        at=c("pixels", "points"),
-                        leaveoneout=TRUE, weights=NULL, 
-                        dx=NULL, dt=NULL, iterMax=1e6,
-                        finespacing=TRUE, verbose=FALSE) {
+densityHeatlpp <- function(x, sigma, ...,
+                            at=c("pixels", "points"),
+                            leaveoneout=TRUE, weights=NULL, 
+                            dx=NULL, dt=NULL, iterMax=1e6,
+                            finespacing=TRUE, verbose=FALSE) {
   stopifnot(is.lpp(x))
   check.1.real(sigma)
   at <- match.arg(at)
