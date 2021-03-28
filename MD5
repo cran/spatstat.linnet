@@ -1,6 +1,6 @@
-a7be9e60f8d44207ce1f13bcfc3b5183 *DESCRIPTION
-277f60098693b2e6cd9e31b3dd733c08 *NAMESPACE
-5b64b31f1693b0b95e207a159d410710 *NEWS
+ae724b56c4bb5ef6097e4f33d724d46b *DESCRIPTION
+7fdc6c1a938e4e3244cd57d37cfb12f2 *NAMESPACE
+baed522816cb879817d0b16de47bd813 *NEWS
 4e2027728562a7df69a9558edfe5e958 *R/First.R
 cb99a8a53f198739bc9726373fc5491a *R/Math.linim.R
 187654494b53855c99d1ddf3121bee7c *R/Math.linimlist.R
@@ -13,7 +13,7 @@ e317941f2ea501d3f8f31733bd17173b *R/clickjoin.R
 5d2adc377a2ee300837cd37e4e344dfd *R/crossdistlpp.R
 8e30273faaa99f9171814699ef9e51d4 *R/deldirnet.R
 88f0d55249afe2f9ba14f9b75a6cfd9b *R/density.loo.R
-49801027fe242712abc0319c13c84220 *R/density.lpp.R
+d5b93ba036518600b85852f9bc480e98 *R/density.lpp.R
 aee4f6bea13ca4c1d6ef890d8f046cb9 *R/densityfunlpp.R
 d078f4836b409d5e30084fbbea199f01 *R/densitylppVoronoi.R
 f8d4fb83fb4129516c7d964047cb054c *R/distfunlpp.R
@@ -42,7 +42,7 @@ c81eacba48ddf6dfc385ac6ddf2880d6 *R/nnfromvertex.R
 7c991b3e96c24ed6e67e8e55d7d7e7df *R/nnfunlpp.R
 f1e1f35fdbf405243326f757f6e144ae *R/pairdistlpp.R
 edd44b97b90778a213be91e179956572 *R/quickndirty.R
-4aa0c13570b684e6236cfbe91d2c9f59 *R/randomlpp.R
+607587daabf7c41d10a3ffed3169bab9 *R/randomlpp.R
 7bceda3656d8009808c3506528f2f04d *R/rcelllpp.R
 5349ce4b07899f37e930c5c38d25950f *R/relrisk.lpp.R
 9e5c50034ee0d5cbb5f069707b87f492 *R/rhohatlpp.R
@@ -51,7 +51,7 @@ edd44b97b90778a213be91e179956572 *R/quickndirty.R
 b3c3d90d017e1fb9830bb9e20b76b07e *R/treebranches.R
 c322eb0238ba8347d3ac1238ce736ed1 *R/unstacklpp.R
 6f2f4dd6b46a2edd246daafc2d147f4e *inst/CITATION
-e0eb5e79bb18bac0ca9df301739660e8 *inst/doc/packagesizes.txt
+51050c480e0b35d9658eea054fe26f58 *inst/doc/packagesizes.txt
 12e68895fef0d3aa0bde45a0ddbadfa4 *inst/ratfor/Makefile
 22e8a5189942ba190c13475b35459c7f *inst/ratfor/dppll.r
 6d471ec061ea91398ba16323de56b9db *inst/ratfor/inxypOld.r
@@ -92,10 +92,10 @@ e1b7687066cc53ac3eb1a34be3f11073 *man/data.lppm.Rd
 652c6ff5511e6a5ad1fd5c338590fef8 *man/delaunayNetwork.Rd
 c9aabaae8e19078decca8cb19c6b7ab5 *man/deletebranch.Rd
 126919bffb368abd0b2f0c0ac937ba8a *man/density.linnet.Rd
-4412526ef04caf7c8f9b64cc732d80b0 *man/density.lpp.Rd
-0badee7d3f4dccfac37062fe52de6cf9 *man/densityEqualSplit.Rd
-09d3950d9e9ee114b744cef137987eae *man/densityHeatlpp.Rd
-4096ddf850d7c467a048885aa2e04205 *man/densityQuick.lpp.Rd
+c2874355250b920465c413b4c819e7ae *man/density.lpp.Rd
+e331e6e39c66226a49839dc175a7073d *man/densityEqualSplit.Rd
+1046cdcd965989580353a55fb82502fd *man/densityHeat.lpp.Rd
+15d9010d789c15829b7e94a51877ac13 *man/densityQuick.lpp.Rd
 c71ab76dcec73111e75f4c32b109fb2b *man/densityVoronoi.lpp.Rd
 68b2aed096d3bd0711229d111c9ed490 *man/densityfun.lpp.Rd
 041bedc39fc1f905ec3c6964cbed8119 *man/diameter.linnet.Rd
@@ -173,6 +173,7 @@ c556143ebe93c4f2cd2c28f0515f9916 *man/rSwitzerlpp.Rd
 fd18786a39d15e83baf3329459d464c3 *man/relrisk.lpp.Rd
 b1b0c94ffacfa5a7eb705e05d0ee02f4 *man/repairNetwork.Rd
 f6b489e0fd35c9048d5fc49ddc9c54c6 *man/rhohat.lpp.Rd
+e948ce27b9e844b7a112e0fda81a8dbc *man/rjitterlpp.Rd
 4c0dc89855eeaef976d52181c2ec7184 *man/rlpp.Rd
 2a27171241b97d49cde44f7bd2c60f39 *man/roc.lpp.Rd
 431cc7fdc28659d5404cbacc19720b52 *man/rpoislpp.Rd
@@ -216,5 +217,5 @@ e677d804970b9268c88a6de8abdd252b *src/linvknndist.c
 a95fcf89b8bd29a5bf30b6e512179439 *src/proto.h
 5c127a9d5ddeaee8cc8f34b32218a3a5 *src/yesno.h
 7ad423aee7399dac6f9bb0f9370bc56f *tests/testsAtoK.R
-3c4f15b8ceaa1d8dcf4ec8102868be85 *tests/testsL.R
+7e0baaeae39b9630b418349406ff5c00 *tests/testsL.R
 3413e7c8882fbfb1e04917fb6b131154 *tests/testsMtoZ.R

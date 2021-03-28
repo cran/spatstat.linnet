@@ -1,5 +1,5 @@
-\name{densityHeatlpp}
-\alias{densityHeatlpp}
+\name{densityHeat.lpp}
+\alias{densityHeat.lpp}
 \title{
   Kernel Density on a Network using Heat Equation
 }
@@ -9,7 +9,7 @@
   by solving the heat equation.
 }
 \usage{
-  densityHeatlpp(x, sigma, \dots,
+  \method{densityHeat}{lpp}(x, sigma, \dots,
               at=c("pixels", "points"), leaveoneout=TRUE,
               weights = NULL,
               dx = NULL, dt = NULL, iterMax = 1e+06,
@@ -30,8 +30,9 @@
   }
   \item{at}{
     String specifying whether to compute the intensity values
-    at a grid of pixel locations (\code{at="pixels"}) or
-    only at the points of \code{x} (\code{at="points"}).
+    at a fine grid of pixel locations on the network
+    (\code{at="pixels"}, the default) or
+    only at the data points of \code{x} (\code{at="points"}).
   }
   \item{leaveoneout}{
     Logical value indicating whether to compute a leave-one-out
@@ -62,6 +63,10 @@
   }
 }
 \details{
+  The function \code{\link[spatstat.core]{densityHeat}} is generic.
+  This is the method for the class \code{"lpp"} of points on a linear
+  network.
+  
   Kernel smoothing is applied to the points of \code{x}
   using a kernel based on path distances in the network.
   If \code{at="pixels"} (the default),
@@ -132,7 +137,11 @@
   }
 }
 \value{
-  A pixel image on the linear network (object of class \code{"linim"}).
+  If \code{at="pixels"} (the default),
+  a pixel image on the linear network (object of class \code{"linim"}).
+
+  If \code{at="points"}, a numeric vector with one entry for each point
+  of \code{x}.
 }
 \references{
   McSwiggan, G., Baddeley, A. and Nair, G. (2016)
@@ -155,10 +164,10 @@
 }
 \examples{
   X <- runiflpp(3, simplenet)
-  D <- densityHeatlpp(X, 0.2)
+  D <- densityHeat(X, 0.2)
   plot(D, style="w", main="", adjust=2)
-  densityHeatlpp(X, 0.2, at="points")
-  Dw <- densityHeatlpp(X, 0.2, weights=c(1,2,-1))
+  densityHeat.lpp(X, 0.2, at="points")
+  Dw <- densityHeat(X, 0.2, weights=c(1,2,-1))
 }
 \keyword{spatial}
 \keyword{methods}
