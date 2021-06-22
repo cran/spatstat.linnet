@@ -1,6 +1,6 @@
-ae724b56c4bb5ef6097e4f33d724d46b *DESCRIPTION
+182daa69ab0e64205cd99ff11ccf6f04 *DESCRIPTION
 7fdc6c1a938e4e3244cd57d37cfb12f2 *NAMESPACE
-baed522816cb879817d0b16de47bd813 *NEWS
+ee5300d5b7c92d8cb102a6773237c7ee *NEWS
 4e2027728562a7df69a9558edfe5e958 *R/First.R
 cb99a8a53f198739bc9726373fc5491a *R/Math.linim.R
 187654494b53855c99d1ddf3121bee7c *R/Math.linimlist.R
@@ -18,7 +18,7 @@ aee4f6bea13ca4c1d6ef890d8f046cb9 *R/densityfunlpp.R
 d078f4836b409d5e30084fbbea199f01 *R/densitylppVoronoi.R
 f8d4fb83fb4129516c7d964047cb054c *R/distfunlpp.R
 9e8172e789391e6329e03e28139c65b3 *R/envelopelpp.R
-3f69ec92896938ee6ae1cac042426e4f *R/evalcovarlppm.R
+aac954434e0806365b90c9ef8ea6b0a8 *R/evalcovarlppm.R
 fe829d4df6cdcd24b4719f2a418eb0c7 *R/heatapprox.R
 f35b11891e94b4f6b72d7ba5d5190ddb *R/lindirichlet.R
 510dd2efb4f5c1c556a4af8a0a888685 *R/linearK.R
@@ -29,7 +29,7 @@ f2f04bfaec86cf00552471bb235c43db *R/linearmrkcon.R
 799aa539c47b94518c01d996d4c44ff7 *R/linearpcfmulti.R
 78edf8d9c2de8b98bfa5b4187b1ff48d *R/linequad.R
 6076009f96cbc0a9e8bebab3bf448c34 *R/linfun.R
-ad708177febb5ece28f4e6f63d2111ef *R/linim.R
+9b59f40b69c1181de3f4f188150612d0 *R/linim.R
 47d2213f470d4e802223152bc48c8573 *R/linnet.R
 b25f43d971c26f4aacc5107c20b97409 *R/linnetsurgery.R
 d800917852761c7aceb8d6d04f5a9099 *R/lintess.R
@@ -45,13 +45,13 @@ edd44b97b90778a213be91e179956572 *R/quickndirty.R
 607587daabf7c41d10a3ffed3169bab9 *R/randomlpp.R
 7bceda3656d8009808c3506528f2f04d *R/rcelllpp.R
 5349ce4b07899f37e930c5c38d25950f *R/relrisk.lpp.R
-9e5c50034ee0d5cbb5f069707b87f492 *R/rhohatlpp.R
+d3c05280d2a7db0ceaa01312f82b8187 *R/rhohatlpp.R
 2a90c951536a4919bd46c0294fa4664e *R/simulatelppm.R
 5028969a6d80e24270a27f4ffc2585be *R/subsetlpp.R
 b3c3d90d017e1fb9830bb9e20b76b07e *R/treebranches.R
 c322eb0238ba8347d3ac1238ce736ed1 *R/unstacklpp.R
 6f2f4dd6b46a2edd246daafc2d147f4e *inst/CITATION
-51050c480e0b35d9658eea054fe26f58 *inst/doc/packagesizes.txt
+5405bfbebacefc6cff34b6adcdded020 *inst/doc/packagesizes.txt
 12e68895fef0d3aa0bde45a0ddbadfa4 *inst/ratfor/Makefile
 22e8a5189942ba190c13475b35459c7f *inst/ratfor/dppll.r
 6d471ec061ea91398ba16323de56b9db *inst/ratfor/inxypOld.r
@@ -172,14 +172,14 @@ c556143ebe93c4f2cd2c28f0515f9916 *man/rSwitzerlpp.Rd
 2dd9734f2a1dae007f2b6038f2add499 *man/rcelllpp.Rd
 fd18786a39d15e83baf3329459d464c3 *man/relrisk.lpp.Rd
 b1b0c94ffacfa5a7eb705e05d0ee02f4 *man/repairNetwork.Rd
-f6b489e0fd35c9048d5fc49ddc9c54c6 *man/rhohat.lpp.Rd
+15c560d460b051d06d716a1a288466dd *man/rhohat.lpp.Rd
 e948ce27b9e844b7a112e0fda81a8dbc *man/rjitterlpp.Rd
 4c0dc89855eeaef976d52181c2ec7184 *man/rlpp.Rd
 2a27171241b97d49cde44f7bd2c60f39 *man/roc.lpp.Rd
 431cc7fdc28659d5404cbacc19720b52 *man/rpoislpp.Rd
 d5d02f9cd0793e69a1c46b8eadeca5a9 *man/runiflpp.Rd
 a77f193e9fc39cc11d662323d2194f43 *man/simulate.lppm.Rd
-dc9778ec977b7342b54e9d868b087345 *man/spatstat.linnet-internal.Rd
+ef97f9feee1fcc8740164587c3f70ca3 *man/spatstat.linnet-internal.Rd
 d91a0e873247afab345c6eeeb93e1966 *man/spatstat.linnet-package.Rd
 b4cdfa355b6cfef19ac7088b1dc1436d *man/subset.lpp.Rd
 9555c94642212f7cfbb22fe921eab696 *man/superimpose.lpp.Rd
@@ -216,6 +216,6 @@ e677d804970b9268c88a6de8abdd252b *src/linvknndist.c
 2d8992531002b91a3c0861b1e7f7df9b *src/lixel.c
 a95fcf89b8bd29a5bf30b6e512179439 *src/proto.h
 5c127a9d5ddeaee8cc8f34b32218a3a5 *src/yesno.h
-7ad423aee7399dac6f9bb0f9370bc56f *tests/testsAtoK.R
+ab5679cd1feb4ffcf364ca4fc776a5b4 *tests/testsAtoK.R
 7e0baaeae39b9630b418349406ff5c00 *tests/testsL.R
 3413e7c8882fbfb1e04917fb6b131154 *tests/testsMtoZ.R

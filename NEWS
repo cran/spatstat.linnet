@@ -1,4 +1,34 @@
 
+        CHANGES IN spatstat.linnet VERSION 2.2-1
+
+OVERVIEW
+
+    o Minor changes to satisfy CRAN.
+
+        CHANGES IN spatstat.linnet VERSION 2.2-0
+
+OVERVIEW
+
+    o Extensions to rhohat.lpp and rhohat.lppm.
+    
+    o Internal bug fixes.
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o rhohat.lpp, rhohat.lppm
+    New option (smoother='piecewise') computes a piecewise-constant
+    estimate of rho(z).
+
+    o rhohat.lpp, rhohat.lppm
+    The result now includes the 'average' intensity rho.
+
+        CHANGES IN spatstat.linnet VERSION 2.1-1
+
+OVERVIEW
+
+    o Tweak to satisfy the package checker.
+
+
         CHANGES IN spatstat.linnet VERSION 2.1-0
 
 OVERVIEW

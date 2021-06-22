@@ -1,6 +1,6 @@
 Package: spatstat.linnet
-Version: 2.1-1
-Date: 2021-03-28
+Version: 2.2-1
+Date: 2021-06-22
 Title: Linear Networks Functionality of the 'spatstat' Family
 Authors@R: c(person("Adrian", "Baddeley", 
                     role = c("aut", "cre"),
@@ -21,9 +21,9 @@ Authors@R: c(person("Adrian", "Baddeley",
 	            role = "ctb"))
 Maintainer: Adrian Baddeley <Adrian.Baddeley@curtin.edu.au>
 Depends: R (>= 3.5.0), spatstat.data (>= 2.1-0), spatstat.geom (>=
-        2.0-0), spatstat.core (>= 2.0-0), stats, graphics, grDevices,
+        2.2-0), spatstat.core (>= 2.2-0), stats, graphics, grDevices,
         methods, utils
-Imports: spatstat.utils (>= 2.1-0), Matrix
+Imports: spatstat.utils (>= 2.2-0), Matrix
 Suggests: goftest, locfit, spatstat (>= 2.0-0)
 Description: Defines types of spatial data on a linear network
 	     and provides functionality for geometrical operations,
@@ -39,8 +39,8 @@ License: GPL (>= 2)
 URL: http://spatstat.org/
 NeedsCompilation: yes
 ByteCompile: true
-BugReports: https://github.com/baddstats/spatstat.linnet/issues
-Packaged: 2021-03-28 09:17:09 UTC; adrian
+BugReports: https://github.com/spatstat/spatstat.linnet/issues
+Packaged: 2021-06-22 04:11:09 UTC; adrian
 Author: Adrian Baddeley [aut, cre],
   Rolf Turner [aut],
   Ege Rubak [aut],
@@ -49,4 +49,4 @@ Author: Adrian Baddeley [aut, cre],
   Greg McSwiggan [ctb],
   Suman Rakshit [ctb]
 Repository: CRAN
-Date/Publication: 2021-03-28 14:50:09 UTC
+Date/Publication: 2021-06-22 05:50:06 UTC
