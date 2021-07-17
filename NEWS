@@ -1,4 +1,48 @@
 
+        CHANGES IN spatstat.linnet VERSION 2.3-0
+
+OVERVIEW
+
+    o We thank Suman Rakshit, Greg McSwiggan and Marc Schneble
+    for contributions.
+
+    o Sufficient Dimension Reduction on a linear network.
+    
+    o Perspective-view plots of linfun and linim objects.
+    
+    o Bug fix to Math.linim
+
+    o Minor additions.
+
+NEW FUNCTIONS
+
+    o sdr.lpp
+    Sufficient Dimension Reduction on a linear network.
+    [Contributed by Suman Rakshit.]
+    
+    o persp.linfun, persp.linim
+    Perspective-view plots of functions on a linear network (class linim)
+    and images on a linear network (class linfun).
+    [Written by Adrian Baddeley and Greg McSwiggan.]
+    
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o response.lppm
+    Method for 'response' for fitted point process models on a network.
+
+BUG FIXES
+
+    o Math.linim
+    If 'Z' was a pixel image on a network (class 'linim')
+    and 'v' was a single number, then 'Z/v' was a pixel image (class 'im')
+    instead of a pixel image on a network (class 'linim').
+    [Spotted by Marc Schneble.]
+    Fixed.
+
+    o bw.voronoi
+    Printed output stated that the cross-validation criterion was minimised
+    instead of maximised.
+
         CHANGES IN spatstat.linnet VERSION 2.2-1
 
 OVERVIEW
