@@ -3,7 +3,7 @@
 #
 #  Random point pattern generators for a linear network
 #
-#  $Revision: 1.14 $   $Date: 2021/03/19 04:04:44 $
+#  $Revision: 1.17 $   $Date: 2021/10/01 06:12:25 $
 #
 
 rpoislpp <- function(lambda, L, ..., nsim=1, drop=TRUE) {
@@ -112,7 +112,12 @@ rlpp <- function(n, f, ..., nsim=1, drop=TRUE) {
   return(result)
 }
 
-rjitterlpp <- function(X, radius, ..., nsim=1, drop=TRUE) {
+rjitterlpp <- function(X, ...) {
+  .Deprecated("rjitter.lpp", package="spatstat.linnet")
+  rjitter.lpp(X, ...)
+}
+
+rjitter.lpp <- function(X, radius, ..., nsim=1, drop=TRUE) {
   verifyclass(X, "lpp")
   check.1.integer(nsim)
   stopifnot(nsim >= 1)
@@ -128,8 +133,12 @@ rjitterlpp <- function(X, radius, ..., nsim=1, drop=TRUE) {
   tX <- cooX$tp
   segX <- cooX$seg
   ##
-  lo <- pmax(tX-radius, 0)
-  hi <- pmin(tX+radius, 1)
+  len <- lengths_psp(as.psp(L))
+  lenS <- len[segX]
+  relrad <- ifelse(lenS > 0, radius/lenS, 0)
+  ##
+  lo <- pmax(tX-relrad, 0)
+  hi <- pmin(tX+relrad, 1)
   ra <- hi - lo
   ##
   result <- vector(mode="list", length=nsim)

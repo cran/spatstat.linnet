@@ -1,4 +1,37 @@
 
+        CHANGES IN spatstat.linnet VERSION 2.3-1
+
+OVERVIEW
+
+    o More control over resolution of 'linim' objects.
+    
+    o Improved documentation.
+
+    o Minor improvements and bug fixes.
+    
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o as.linim.default, as.linim.linfun
+    New argument 'nd'
+
+    o integral.linfun
+    New argument 'nd'
+
+    o rjitterlpp, rjitter.lpp
+    The function 'rjitterlpp' has been renamed 'rjitter.lpp'
+    and is now a method for the generic 'rjitter'.
+
+    o rjitterlpp
+    This function still exists, but is now deprecated in favour of 'rjitter.lpp'.
+
+BUG FIXES
+
+    o rjitterlpp
+    The argument 'radius' was interpreted as a fraction of segment length
+    rather than an absolute distance.
+    Fixed.
+    
+
         CHANGES IN spatstat.linnet VERSION 2.3-0
 
 OVERVIEW
@@ -42,6 +75,7 @@ BUG FIXES
     o bw.voronoi
     Printed output stated that the cross-validation criterion was minimised
     instead of maximised.
+
 
         CHANGES IN spatstat.linnet VERSION 2.2-1
 
@@ -91,7 +125,12 @@ NEW FUNCTIONS
 
     o rjitterlpp
     Apply random displacements to the points on a linear network.
-    
+
+    o densityHeat.lpp
+    Diffusion kernel estimation of intensity on a linear network.
+    (formerly known as 'densityHeatlpp' and 'densityHeat', this is
+    now a method for the new generic 'densityHeat')
+
 SIGNIFICANT USER-VISIBLE CHANGES
 
     o densityEqualSplit
@@ -102,6 +141,9 @@ SIGNIFICANT USER-VISIBLE CHANGES
     is now renamed 'densityHeat.lpp' and is a method for the generic
     'densityHeat'.
 
+    o density.lpp
+    Accelerated when the pattern contains duplicated points.
+    
 BUG FIXES
 
     o density.lpp
@@ -126,12 +168,31 @@ SIGNIFICANT USER-VISIBLE CHANGES
     'densityHeat' has been temporarily renamed 'densityHeatlpp',
     to prevent errors in the package checking process.
 
+    o [.linim
+    Accelerated.
+
+
 BUG FIXES
+
+    o deviance.lppm, pseudoR2.lppm
+    Results were completely incorrect, due to a coding error.
+    Fixed.
 
     o density.lpp
     Crashed if 'weights' were given and 'x' contained duplicated points.
     [Spotted by Andrea Gilardi]
     Fixed.
+
+    o Lcross.inhom, Kcross.inhom, Kmulti.inhom
+    The option 'correction="none"' was accepted but ignored.
+    [Spotted by Corey Anderson.]
+    Fixed.
+
+    o simulate.rhohat
+    Crashed when applied to rhohat objects computed from data
+    on a linear network.
+    Fixed.
+    
 
         CHANGES IN spatstat.linnet VERSION 1.65-9
 

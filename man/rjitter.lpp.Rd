@@ -1,12 +1,12 @@
-\name{rjitterlpp}
-\alias{rjitterlpp}
+\name{rjitter.lpp}
+\alias{rjitter.lpp}
 \title{Random Perturbation of a Point Pattern on a Network}
 \description{
   Applies independent random displacements to each point
   in a point pattern on a network.
 }
 \usage{
-rjitterlpp(X, radius, \dots, nsim = 1, drop = TRUE)
+\method{rjitter}{lpp}(X, radius, \dots, nsim = 1, drop = TRUE)
 }
 \arguments{
   \item{X}{
@@ -29,6 +29,9 @@ rjitterlpp(X, radius, \dots, nsim = 1, drop = TRUE)
   }
 }
 \details{
+  The function \code{\link[spatstat.geom]{rjitter}} is generic. This function is
+  the method for the class \code{"lpp"} of point patterns on a linear network.
+
   Each of the points in \code{X} will be displaced along the network
   by a random amount, independently of other points.
   The maximum displacement distance is specified by \code{radius}.
@@ -37,7 +40,8 @@ rjitterlpp(X, radius, \dots, nsim = 1, drop = TRUE)
 }
 \value{
   A point pattern on a linear network
-  (object of class \code{"lpp"}).
+  (object of class \code{"lpp"})
+  or a list of such point patterns.
 }
 \author{
   \spatstatAuthors.
@@ -48,7 +52,7 @@ rjitterlpp(X, radius, \dots, nsim = 1, drop = TRUE)
 \examples{
    X <- runiflpp(3, simplenet)
    plot(X, pch=16)
-   Y <- rjitterlpp(X, 0.1)
+   Y <- rjitter(X, 0.1)
    plot(Y, add=TRUE, cols=3)
 }
 \keyword{spatial}
