@@ -1,7 +1,7 @@
 #
 # linearpcfmulti.R
 #
-# $Revision: 1.15 $ $Date: 2020/01/11 04:36:59 $
+# $Revision: 1.17 $ $Date: 2022/06/27 02:19:57 $
 #
 # pair correlation functions for multitype point pattern on linear network
 #
@@ -77,8 +77,11 @@ linearpcfmulti <- function(X, I, J, r=NULL, ..., correction="Ang") {
 #  lambdaI <- nI/lengthL
 #  lambdaJ <- nJ/lengthL
   # compute pcf
-  denom <- (nI * nJ - nIandJ)/lengthL
-  g <- linearPCFmultiEngine(X, I, J, r=r, denom=denom, correction=correction, ...)
+  samplesize <- npairs <- nI * nJ - nIandJ
+  denom <- npairs/lengthL
+  g <- linearPCFmultiEngine(X, I, J, r=r,
+                            denom=denom, samplesize=samplesize,
+                            correction=correction, ...)
   # set appropriate y axis label
   correction <- attr(g, "correction")
   type <- if(correction == "Ang") "L" else "net"
@@ -165,8 +168,8 @@ linearpcfmulti.inhom <- function(X, I, J, lambdaI, lambdaJ,
   if(!any(I)) stop("no points satisfy I")
 
   # validate lambda vectors
-  lambdaI <- getlambda.lpp(lambdaI, X, subset=I, ...)
-  lambdaJ <- getlambda.lpp(lambdaJ, X, subset=J, ...)
+  lambdaI <- resolve.lambda.lpp(X, lambdaI, subset=I, ...)
+  lambdaJ <- resolve.lambda.lpp(X, lambdaJ, subset=J, ...)
 
   # compute pcf
   weightsIJ <- outer(1/lambdaI, 1/lambdaJ, "*")
@@ -186,8 +189,9 @@ linearpcfmulti.inhom <- function(X, I, J, lambdaI, lambdaJ,
 
 # .............. internal ...............................
 
-linearPCFmultiEngine <- function(X, I, J, ..., r=NULL, reweight=NULL, denom=1,
-                          correction="Ang", showworking=FALSE) {
+linearPCFmultiEngine <- function(X, I, J, ..., r=NULL, reweight=NULL,
+                                 denom=1, samplesize=NULL, 
+                                 correction="Ang", showworking=FALSE) {
   # ensure distance information is present
   X <- as.lpp(X, sparse=FALSE)
   # extract info about pattern
@@ -240,7 +244,8 @@ linearPCFmultiEngine <- function(X, I, J, ..., r=NULL, reweight=NULL, denom=1,
   #---  compile into pair correlation function ---
   if(correction == "none" && is.null(reweight)) {
     # no weights (Okabe-Yamada)
-    g <- compilepcf(DIJ, r, denom=denom, check=FALSE, fname=fname)
+    g <- compilepcf(DIJ, r, denom=denom, check=FALSE,
+                    fname=fname, samplesize=samplesize)
     g <- rebadge.as.crossfun(g, "g", "net", "I", "J")    
     unitname(g) <- unitname(X)
     attr(g, "correction") <- correction
@@ -259,7 +264,7 @@ linearPCFmultiEngine <- function(X, I, J, ..., r=NULL, reweight=NULL, denom=1,
   # compute pcf
   wt <- if(!is.null(reweight)) edgewt * reweight else edgewt
   g <- compilepcf(DIJ, r, weights=wt, denom=denom, check=FALSE, ...,
-                  fname=fname)
+                  fname=fname, samplesize=samplesize)
   ## rebadge and tweak
   g <- rebadge.as.crossfun(g, "g", "L", "I", "J")
   fname <- attr(g, "fname")

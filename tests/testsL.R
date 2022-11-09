@@ -17,7 +17,7 @@ cat(paste("--------- Executing",
 #
 # Tests for lpp code
 #
-#  $Revision: 1.70 $  $Date: 2021/07/01 02:16:16 $
+#  $Revision: 1.71 $  $Date: 2022/06/27 02:43:58 $
 
 
 local({
@@ -52,13 +52,13 @@ local({
 
     #' check 'normalise' option in linearKinhom
     fit <- lppm(Xsimple ~x)
-    K <- linearKinhom(Xsimple, lambda=fit, normalise=FALSE)
+    K <- linearKinhom(Xsimple, lambda=fit, normalise=FALSE, leaveoneout=FALSE)
     plot(K)
-    g <- linearpcfinhom(Xsimple, lambda=fit, normalise=FALSE)
+    g <- linearpcfinhom(Xsimple, lambda=fit, normalise=FALSE, leaveoneout=FALSE)
     plot(g)
-    K <- linearKinhom(Xsimple, lambda=fit, normalise=TRUE)
+    K <- linearKinhom(Xsimple, lambda=fit, normalise=TRUE, leaveoneout=FALSE)
     plot(K)
-    g <- linearpcfinhom(Xsimple, lambda=fit, normalise=TRUE)
+    g <- linearpcfinhom(Xsimple, lambda=fit, normalise=TRUE, leaveoneout=FALSE)
     plot(g)
     ## other code blocks
     K <- linearKinhom(Xsimple, lambda=fit, correction="none", ratio=TRUE)
@@ -763,20 +763,20 @@ local({
   }
 
   #' fundamental utilities:
-  #' evalCovar
+  #' spatialCovariateEvidence (was: evalCovar)
   ycoord <- function(x,y) { y }
   if(ALWAYS) YS <- as.linim(ycoord, L=domain(spiders))
   if(FULLTEST) YC <- as.linim(ycoord, L=domain(chicago))
 
-  if(ALWAYS) aT <- evalCovar(fit1, YS, interpolate=TRUE)
+  if(ALWAYS) aT <- spatialCovariateEvidence(fit1, YS, interpolate=TRUE)
   if(FULLTEST) {
-    aF <- evalCovar(fit1, YS, interpolate=FALSE)
-    dT <- evalCovar(fit1, ycoord, interpolate=TRUE)
-    dF <- evalCovar(fit1, ycoord, interpolate=FALSE)
-    bT <- evalCovar(fit2, YC, interpolate=TRUE)
-    bF <- evalCovar(fit2, YC, interpolate=FALSE)
-    cT <- evalCovar(fit2, ycoord, interpolate=TRUE)
-    cF <- evalCovar(fit2, ycoord, interpolate=FALSE)
+    aF <- spatialCovariateEvidence(fit1, YS, interpolate=FALSE)
+    dT <- spatialCovariateEvidence(fit1, ycoord, interpolate=TRUE)
+    dF <- spatialCovariateEvidence(fit1, ycoord, interpolate=FALSE)
+    bT <- spatialCovariateEvidence(fit2, YC, interpolate=TRUE)
+    bF <- spatialCovariateEvidence(fit2, YC, interpolate=FALSE)
+    cT <- spatialCovariateEvidence(fit2, ycoord, interpolate=TRUE)
+    cF <- spatialCovariateEvidence(fit2, ycoord, interpolate=FALSE)
   }
   
 })

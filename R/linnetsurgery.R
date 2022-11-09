@@ -3,7 +3,7 @@
 #'
 #' Surgery on linear networks and related objects
 #'
-#' $Revision: 1.31 $  $Date: 2020/04/01 04:44:15 $
+#' $Revision: 1.34 $  $Date: 2022/07/20 08:13:54 $
 #'
 
 insertVertices <- function(L, ...) {
@@ -21,6 +21,7 @@ insertVertices <- function(L, ...) {
   V <- as.lpp(..., L=L)
   if(!identical(as.linnet(L, sparse=TRUE), as.linnet(V, sparse=TRUE)))
     stop("New vertices must lie on exactly the same network as L")
+  ## trivial case
   if(npoints(V) == 0) {
     attr(L, "id") <- integer(0)
     if(!haspoints) {
@@ -115,8 +116,8 @@ insertVertices <- function(L, ...) {
                length(comefrom), "!=", nsegments(S), "= number of segments"),
          call.=FALSE)
   #' copy marks
-  if(!is.null(marx <- marks(L$lines))) 
-    marks(S) <- as.data.frame(marx)[comefrom, , drop=FALSE]
+  if(!is.null(marx <- marks(L$lines)))
+    marks(S) <- marksubset(marx, comefrom)
   Lnew$lines <- S
   #' save information identifying the new vertices in the new network
   newid <- integer(nadd)
@@ -263,6 +264,7 @@ thinNetwork <- function(X, retainvertices, retainedges) {
   to   <- L$to
   V <- L$vertices
   sparse <- identical(L$sparse, TRUE)
+  edgemarks <- marks(L$lines) # vertex marks are handled automatically
   #' determine which edges/vertices are to be retained
   edgesFALSE <- logical(nsegments(L))
   verticesFALSE <- logical(npoints(V))
@@ -302,6 +304,9 @@ thinNetwork <- function(X, retainvertices, retainedges) {
   reverse <- reverse[nontrivial]
   ## extract relevant subset of network
   Lsub <- linnet(Vsub, edges=edgepairs, sparse=sparse, warn=FALSE)
+  ## reattach marks to edges
+  if(!is.null(edgemarks))
+    marks(Lsub$lines) <- marksubset(edgemarks, retainedges)
   ## tack on information about subset
   attr(Lsub, "retainvertices") <- retainvertices
   attr(Lsub, "retainedges") <- retainedges
@@ -397,7 +402,7 @@ addVertices <- function(L, X, join=NULL, joinmarks=NULL) {
   ## optionally join new vertices to existing network
   if(!is.null(join)) {
     if(is.numeric(join)) {
-      check.nvector(join, nX, things="points of X")
+      check.nvector(join, nX, things="points of X", vname="join")
       out <- joinVertices(out, inew, join, marks=joinmarks)
     } else if(is.character(join)) {
       join <- match.arg(join, c("vertices", "nearest"))

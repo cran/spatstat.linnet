@@ -16,22 +16,23 @@
 \alias{print.summary.linnet}
 \alias{print.summary.lintess}
 \alias{resolve.heat.steps}
+\alias{rmaxEuclidean}
 \alias{summary.lintess}
 \alias{nobjects.lintess}
 \alias{Window.lintess}
 \alias{Window<-.linnet}
 \alias{Window<-.lpp}
 \alias{densitypointsLPP}
-\alias{evalCovar.lppm}
 \alias{flatdensityfunlpp}
 \alias{flatdensityatpointslpp}
-\alias{getlambda.lpp}
 \alias{local2lpp}
 \alias{looHeatLPP}
 \alias{looVoronoiLPP}
 \alias{validate.lpp.coords}
 \alias{as.ppm.lppm}
 \alias{pointsAlongNetwork}
+\alias{lineardiscEngine}
+\alias{linearEuclidEngine}
 \alias{linearKengine}
 \alias{linearKmulti}
 \alias{linearKmulti.inhom}
@@ -41,10 +42,13 @@
 \alias{linearpcfmulti.inhom}
 \alias{linearPCFmultiEngine}
 \alias{resampleNetworkDataFrame}
+\alias{resolve.lambda.lpp}
 \alias{sortalongsegment}
+\alias{spatialCovariateEvidence.lppm}
 \alias{vnnFind}
 \alias{ldtEngine}
 \alias{qkdeEngine}
+\alias{updateData.lppm}
 \alias{Math.linimlist}
 \alias{Ops.linimlist}
 \alias{Summary.linimlist}
@@ -58,6 +62,8 @@
   Internal spatstat.linnet functions.
 }
 \usage{
+
+
 
 
 %% Linear networks code is corralled here
@@ -83,13 +89,8 @@ densitypointsLPP(x, sigma, \dots,
                  weights, nsigma, leaveoneout, fast,
                  fastmethod, floored,
                  dx, dt, iterMax, verbose, debug)
-\method{evalCovar}{lppm}(model, covariate, \dots, lambdatype, 
-          eps, dimyx, xy, delta, nd, interpolate, jitter, jitterfactor,
-          modelname, covname, dataname, subset)
 flatdensityfunlpp(X, \dots, disconnect, weights, what)
 flatdensityatpointslpp(X, \dots, leaveoneout, disconnect, weights, what)
-getlambda.lpp(lambda, X, subset, \dots,
-              update, leaveoneout, loo.given, lambdaname)
 local2lpp(L, seg, tp, X, df.only)
 looHeatLPP(U0, Amatrix, npts, niter, nsave,
            lixelweight, lixelmap, verbose) 
@@ -97,21 +98,29 @@ looVoronoiLPP(X)
 validate.lpp.coords(X, fatal, context)
 \method{as.ppm}{lppm}(object)
 pointsAlongNetwork(L, delta)
-linearKengine(X, \dots, r, reweight, denom, correction,
-              ratio, showworking)
+lineardiscEngine(L, x, r, want)
+linearEuclidEngine(X, fun, \dots, r, reweight, denom,
+                   samplesize, showworking, correction)
+linearKengine(X, \dots, r, reweight, denom, samplesize,
+              correction, ratio, showworking)
 linearKmulti(X, I, J, r, \dots, correction)
 linearKmulti.inhom(X, I, J, lambdaI, lambdaJ, r, \dots, correction,
              normalise)
-linearpcfengine(X, \dots, r, reweight, denom, correction, ratio)
+linearpcfengine(X, \dots, r, reweight, denom, samplesize, correction, ratio)
 linearpcfmulti(X, I, J, r, \dots, correction)
 linearpcfmulti.inhom(X, I, J, lambdaI, lambdaJ, r, \dots,
                      correction, normalise)
 linearKmultiEngine(X, I, J, \dots,
-                   r, reweight, denom, correction, showworking)
+                   r, reweight, denom, samplesize, correction, showworking)
 linearPCFmultiEngine(X, I, J, \dots,
-                   r, reweight, denom, correction, showworking)
+                   r, reweight, denom, samplesize, correction, showworking)
 resampleNetworkDataFrame(df, template)
+\method{resolve.lambda}{lpp}(X, lambda, subset, \dots,
+              update, leaveoneout, everywhere, loo.given, lambdaname)
 sortalongsegment(df)
+\method{spatialCovariateEvidence}{lppm}(model, covariate, \dots, lambdatype, 
+          eps, dimyx, xy, delta, nd, interpolate, jitter, jitterfactor,
+          modelname, covname, dataname, subset, clip.predict)
 vnnFind(seg, tp, ns, nv, from, to, seglen, huge, tol, kmax)
 ldtEngine(nv, ns, from, to, seglen, huge,
           coUXord, vnndist, vnnwhich, vnnlab)
@@ -122,10 +131,12 @@ resolve.heat.steps(sigma, \dots, dx, dt,
                    W, eps, dimyx, xy, 
                    allow.adjust, warn.adjust,
                    verbose, stepnames)
+rmaxEuclidean(L, verbose, show)
 qkdeEngine(X, sigma, \dots, at, what,
            leaveoneout, diggle, raw, edge2D, edge,
            weights, varcov, positive, shortcut,
            precomputed, savecomputed)
+\method{updateData}{lppm}(model, X, \dots)
 \special{Math(x, \dots)}
 \special{Ops(e1, e2)}
 \special{Complex(z)}

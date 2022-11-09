@@ -6,14 +6,14 @@
 #'
 #'  Copyright (c) Greg McSwiggan and Adrian Baddeley 2017-2020
 #'
-#'  $Revision: 1.4 $  $Date: 2021/01/07 03:54:20 $
+#'  $Revision: 1.5 $  $Date: 2022/05/21 09:52:11 $
 #'
 
 heatkernelapprox <- function(X, sigma, nmax=20, floored=TRUE) {
   stopifnot(is.lpp(X))
   nX <- npoints(X)
   if(nX == 0) return(numeric(0))
-  check.nvector(sigma, nX, oneok=TRUE)
+  check.nvector(sigma, nX, oneok=TRUE, vname="sigma")
   stopifnot(all(sigma > 0))
   if(length(sigma) == 1) sigma <- rep(sigma, nX)
   check.1.integer(nmax)

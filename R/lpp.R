@@ -1,7 +1,7 @@
 #
 # lpp.R
 #
-#  $Revision: 1.71 $   $Date: 2020/12/19 05:25:06 $
+#  $Revision: 1.82 $   $Date: 2022/10/09 11:00:03 $
 #
 # Class "lpp" of point patterns on linear networks
 
@@ -98,17 +98,24 @@ print.lpp <- function(x, ...) {
 }
 
 plot.lpp <- function(x, ..., main, add=FALSE,
+                     type=c("p", "n"),
                      use.marks=TRUE, which.marks=NULL,
+                     legend=TRUE,
+                     leg.side=c("left", "bottom", "top", "right"),
+                     leg.args=list(),
                      show.all=!add, show.window=FALSE,
                      show.network=TRUE,
                      do.plot=TRUE, multiplot=TRUE) {
   if(missing(main))
     main <- short.deparse(substitute(x))
+  type <- match.arg(type)
+  if(missing(legend)) legend <- (type == "p")
+  leg.side <- match.arg(leg.side)
   ## Handle multiple columns of marks as separate plots
   ##  (unless add=TRUE or which.marks selects a single column
   ##   or multiplot = FALSE)
   mx <- marks(x)
-  if(use.marks && !is.null(dim(mx))) {
+  if(type == "p" && use.marks && !is.null(dim(mx))) {
     implied.all <- is.null(which.marks)
     want.several <- implied.all || !is.null(dim(mx <- mx[,which.marks,drop=TRUE]))
     do.several <- want.several && !add && multiplot
@@ -119,7 +126,8 @@ plot.lpp <- function(x, ..., main, add=FALSE,
       y <- solapply(mx, setmarks, x=x)
       out <- do.call(plot,
                      c(list(x=y, main=main, do.plot=do.plot,
-                            show.window=show.window),
+                            show.window=show.window,
+                            legend=legend, leg.side=leg.side, leg.args=leg.args),
                        list(...)))
       return(invisible(out))
     }
@@ -128,40 +136,70 @@ plot.lpp <- function(x, ..., main, add=FALSE,
       if(do.plot) message("Plotting the first column of marks")
     }
   }
-  ## single plot
-  ## determine space required, including legend
+  ## single plot 
+  ## determine symbol map and plot area required, including legend
   P <- as.ppp(x)
-  a <- plot(P, ..., do.plot=FALSE,
-            use.marks=use.marks, which.marks=which.marks)
-  if(!do.plot) return(a)
+  symap <- plot(P, ..., do.plot=FALSE,
+                use.marks=use.marks, which.marks=which.marks,
+                type=type, legend=legend, leg.side=leg.side, leg.args=leg.args)
+  if(!do.plot) return(symap)
+  
   ## initialise graphics space
   if(!add) {
     if(show.window) {
       plot(Window(P), main=main, invert=TRUE, ...)
     } else {
-      b <- attr(a, "bbox")
-      plot(b, type="n", main=main, ..., show.all=FALSE)
+      b <- attr(symap, "bbox")
+      plot(b, type="n", main=main, ..., show.all=show.all)
     }
   }
   ## plot linear network
-  if(show.network) {
-    L <- as.linnet(x)
-    dont.complain.about(L)
+  L <- as.linnet(x)
+  if(show.network) 
     do.call.matched(plot.linnet,
                     resolve.defaults(list(x=quote(L), add=TRUE),
                                      list(...)),
                     extrargs=c("lty", "lwd", "col"))
+
+  ## plot points
+  if(type == "p") {
+    ## extract relevant mark values
+    if(use.marks) {
+      marx <- marks(P)
+      if(!is.null(dim(marx)))
+        marx <- marx[, which.marks]
+    } else marx <- NULL
+    ## compute required data
+    pnames <- symbolmapparnames(symap)
+    if("shape" %in% pnames) {
+      ## could be using crossticks
+      ## compute direction of network at each data point
+      ang <- angles.psp(as.psp(L))
+      segX <- coords(x)$seg
+      angX <- ang[segX] * 180/pi
+    } else angX <- NULL
+    ## plot points using previously-determined symbol map
+    invoke.symbolmap(symap, marx, P, angleref=angX, add=TRUE)
   }
-  ## plot points, legend, title
-  ans <- do.call.matched(plot.ppp,
-                         c(list(x=P, add=TRUE, main=main,
-                                use.marks=use.marks, which.marks=which.marks,
-                                show.all=show.all, show.window=FALSE),
-                           list(...)),
-                         extrargs=c("shape", "size", "pch", "cex",
-                           "fg", "bg", "cols", "lty", "lwd", "etch",
-                           "cex.main", "col.main", "line", "outer", "sub"))
-  return(invisible(ans))
+  
+  if(legend && (symbolmaptype(symap) != "constant")) {
+    ## plot legend
+    legendmap <- if(length(leg.args) == 0) symap else 
+                 do.call(update, append(list(object=quote(symap)), leg.args))
+    dont.complain.about(legendmap)
+    vertical <- (leg.side %in% c("left", "right"))
+    legbox <- attr(symap, "legbox")
+    if(is.null(legbox)) stop("Internal error - cannot find box for legend")
+    do.call(plot.symbolmap,
+            append(list(x=quote(legendmap),
+                        main="", add=TRUE,
+                        xlim=legbox$xrange, ylim=legbox$yrange,
+                        side=leg.side,
+                        vertical=vertical),
+                   leg.args))
+  }
+
+  return(invisible(symap))
 }
 
 
@@ -249,9 +287,11 @@ intensity.lpp <- function(X, ...) {
   if(is.multitype(X)) table(marks(X))/len else npoints(X)/len
 }
 
-is.lpp <- function(x) {
-  inherits(x, "lpp")
-}
+## Moved to spatstat.geom
+##
+## is.lpp <- function(x) {
+##   inherits(x, "lpp")
+## }
 
 is.multitype.lpp <- function(X, na.action="warn", ...) {
   marx <- marks(X)

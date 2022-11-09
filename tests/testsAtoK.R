@@ -33,6 +33,7 @@ local({
 local({
   NSIM <- 9
   op <- spatstat.options(ndummy.min=16, npixel=32)
+  op <- spatstat.options(ndummy.min=16, npixel=32)
   if(ALWAYS) {
     ## (3) linear networks
     set.seed(42)
@@ -64,7 +65,7 @@ local({
 #'   Tests of "click*" functions
 #'   using queueing feature of spatstatLocator
 #'
-#'   $Revision: 1.7 $ $Date: 2020/11/02 06:53:30 $
+#'   $Revision: 1.8 $ $Date: 2022/10/23 00:45:36 $
 
 local({
   Y <- coords(runiflpp(6, simplenet))
@@ -158,12 +159,20 @@ local({
 #
 #  Test validity of envelope data
 #
-#  $Revision: 1.24 $  $Date: 2020/11/02 06:53:20 $
+#  $Revision: 1.27 $  $Date: 2022/05/22 11:19:56 $
 #
+
+local({
+  
+
+
+
+
+
+
 
 
 if(FULLTEST) {
-local({
   X <- runiflpp(10, simplenet)
   Xr <- X %mark% runif(10)
   Xc <- X %mark% factor(letters[c(1:4,3,2,4:1)])
@@ -183,13 +192,14 @@ local({
   fut <- lppm(Xc ~ marks)
   EEf <- envelope(fut, linearK,      fix.n=TRUE)
   EEm <- envelope(fut, linearKcross, fix.n=TRUE, fix.marks=TRUE)
-})
 }
 
+## close 'local'
+})
 #
 #  tests/func.R
 #
-#   $Revision: 1.8 $   $Date: 2020/12/03 03:28:44 $
+#   $Revision: 1.9 $   $Date: 2022/10/23 00:48:40 $
 #
 #  Tests of 'funxy' infrastructure etc
 
@@ -220,8 +230,9 @@ local({
 #
 #  tests/imageops.R
 #
-#   $Revision: 1.32 $   $Date: 2021/04/14 08:57:21 $
+#   $Revision: 1.40 $   $Date: 2022/10/23 01:57:03 $
 #
+
 
 
 if(FULLTEST) {

@@ -1,21 +1,21 @@
 #'
 #'   evalcovarlppm.R
 #'
-#'   evalCovar method for class lppm
+#'   spatialCovariateEvidence method for class lppm
 #'
-#'   $Revision: 1.6 $ $Date: 2021/08/25 08:31:48 $
+#'   $Revision: 1.8 $ $Date: 2022/05/20 07:37:35 $
 
 
-evalCovar.lppm <- local({
+spatialCovariateEvidence.lppm <- local({
 
-  evalCovar.lppm <- function(model, covariate, ...,
+  spatialCovariateEvidence.lppm <- function(model, covariate, ...,
                              lambdatype=c("cif", "trend", "intensity"),
                              eps=NULL, dimyx=NULL, xy=NULL,
                              delta=NULL, nd=NULL,
                              interpolate=TRUE,
                              jitter=TRUE, jitterfactor=1, 
                              modelname=NULL, covname=NULL,
-                             dataname=NULL, subset=NULL) {
+                             dataname=NULL, subset=NULL, clip.predict=TRUE) {
     lambdatype <- match.arg(lambdatype)
     #' evaluate covariate values at data points and at pixels
     ispois <- is.poisson(model)
@@ -218,7 +218,7 @@ evalCovar.lppm <- local({
     lambdaimage <- predict(model, type=lambdatype)
     
     #' restrict image to subset 
-    if(!is.null(subset)) {
+    if(clip.predict && !is.null(subset)) {
       Zimage      <- applySubset(Zimage, subset)
       lambdaimage <- applySubset(lambdaimage, subset)
     }
@@ -232,7 +232,7 @@ evalCovar.lppm <- local({
                    weights     = wt,
                    ZX          = ZX,
                    type        = type)
-    return(list(values=values, info=info))
+    return(list(values=values, info=info, X=X))
   }
 
   xcoordfun <- function(x,y,m){x}
@@ -250,6 +250,6 @@ evalCovar.lppm <- local({
     if(is.imlist(X)) return(solapply(X, "[", i=subset, drop=FALSE))
     return(NULL)
   }
-  evalCovar.lppm
+  spatialCovariateEvidence.lppm
 })
 

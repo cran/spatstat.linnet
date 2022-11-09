@@ -3,7 +3,7 @@
 #    
 #    Linear networks
 #
-#    $Revision: 1.80 $    $Date: 2021/01/07 03:53:44 $
+#    $Revision: 1.87 $    $Date: 2022/08/06 10:54:00 $
 #
 # An object of class 'linnet' defines a linear network.
 # It includes the following components
@@ -118,6 +118,26 @@ linnet <- function(vertices, m, edges, sparse=FALSE, warn=TRUE) {
   return(out)  
 }
 
+marks.linnet <- function(x, of=c("segments", "vertices"), ...) {
+  of <- match.arg(of)
+  m <- switch(of,
+              vertices = marks(x$vertices, ...),
+              segments = marks(x$lines, ...))
+  return(m)
+}
+
+"marks<-.linnet" <- function(x, of=c("segments", "vertices"), ..., value) {
+  of <- match.arg(of)
+  switch(of,
+         vertices = {
+           marks(x$vertices, ...) <- value
+         },
+         segments = {
+           marks(x$lines, ...) <- value
+         })
+  return(x)
+}
+
 print.linnet <- function(x, ...) {
   nv <- x$vertices$n
   nl <- x$lines$n
@@ -127,6 +147,8 @@ print.linnet <- function(x, ...) {
         nl, ngettext(nl, "line", "lines"))
   if(!is.null(br <- x$boundingradius) && is.infinite(br))
      splat("[Network is not connected]")
+  if(!is.null(x$vertices$marks)) splat("Vertices are marked")
+  if(!is.null(x$lines$marks))    splat("Line segments are marked")
   print(as.owin(x), prefix="Enclosing window: ")
   return(invisible(NULL))
 }
@@ -137,6 +159,8 @@ summary.linnet <- function(object, ...) {
   result <- list(nvert = object$vertices$n,
                  nline = object$lines$n,
                  nedge = sum(deg)/2,
+                 vertmarks = !is.null(object$vertices$marks),
+                 segmarks  = !is.null(object$lines$marks),
                  unitinfo = summary(unitname(object)),
                  totlength = sum(lengths_psp(object$lines)),
                  maxdegree = max(deg),
@@ -159,6 +183,8 @@ print.summary.linnet <- function(x, ...) {
           nvert, ngettext(nvert, "vertex", "vertices"), 
           "and",
           nline, ngettext(nline, "line", "lines"))
+    if(vertmarks) splat("Vertices are marked")
+    if(segmarks) splat("Line segments are marked")
     splat("Total length", signif(totlength, dig), 
           unitinfo$plural, unitinfo$explain)
     splat("Maximum vertex degree:", maxdegree)
@@ -181,31 +207,65 @@ print.summary.linnet <- function(x, ...) {
 }
 
 plot.linnet <- function(x, ..., main=NULL, add=FALSE,
-                        vertices=FALSE, window=FALSE,
-                        do.plot=TRUE) {
+                        do.plot=TRUE,
+                        show.vertices=FALSE, show.window=FALSE,
+                        args.vertices=list(), args.segments=list()) {
   if(is.null(main))
     main <- short.deparse(substitute(x))
   stopifnot(inherits(x, "linnet"))
-  bb <- Frame(x)
-  if(!do.plot) return(invisible(bb))
   lines <- as.psp(x)
-  if(!add) {
-    # initialise new plot
-    w <- as.owin(lines)
-    if(window)
-      plot(w, ..., main=main)
-    else
-      plot(w, ..., main=main, type="n")
+  if(show.vertices) vert <- vertices(x)
+  #' plan layout and save symbolmaps
+  RS <- do.call(plot,
+               resolve.defaults(list(x=quote(lines),
+                                     do.plot=FALSE,
+                                     show.window=show.window,
+                                     main=main,
+                                     multiplot=FALSE),
+                                args.segments,
+                                list(...),
+                                list(use.marks=FALSE, legend=FALSE)))
+  B <- as.owin(RS)
+  if(show.vertices) {
+    RV <- do.call(plot,
+                  resolve.defaults(list(x=quote(vert),
+                                        do.plot=FALSE),
+                                   args.vertices,
+                                   list(...),
+                                   list(use.marks=FALSE, legend=FALSE)))
+    BV <- as.owin(RV)
+    B <- boundingbox(B, BV)
+  } else {
+    RV <- NULL
   }
-  # plot segments and (optionally) vertices
+  ## initialise plot
+  if(!add) 
+    plot(B, type="n", main=main)
+  ## plot segments and (optionally) vertices
   do.call(plot,
           resolve.defaults(list(x=quote(lines),
-                                show.all=FALSE, add=TRUE,
-                                main=main),
-                           list(...)))
-  if(vertices)
-    plot(x$vertices, add=TRUE)
-  return(invisible(bb))
+                                add=TRUE,
+                                show.window=show.window,
+                                show.all=TRUE, 
+                                main="",
+                                multiplot=FALSE),
+                           args.segments,
+                           list(...),
+                           list(use.marks=FALSE, legend=FALSE)))
+  if(show.vertices) {
+    do.call(plot,
+            resolve.defaults(list(x=quote(vert),
+                                  add=TRUE,
+                                  show.window=FALSE,
+                                  show.all=TRUE,
+                                  main=""),
+                             args.vertices,
+                             list(...),
+                             list(use.marks=FALSE, legend=FALSE)))
+  }
+  result <- list(segments=RS, vertices=RV)
+  attr(result, "bbox") <- B
+  return(invisible(result))
 }
 
 as.psp.linnet <- function(x, ..., fatal=TRUE) {
@@ -534,6 +594,13 @@ rescale.linnet <- function(X, s, unitname) {
   from <- x$from
   to   <- x$to
   if(snip) {
+    if(!is.null(marks(vertices(x)))) {
+      warning(paste("Marks attached to the network vertices were removed,",
+                    "because no mark information is available",
+                    "for the new vertices created by [.linnet when snip=TRUE"),
+              call.=FALSE)
+      marks(x$vertices) <- NULL
+    }
     ## For efficiency, first restrict network to relevant segments.
     ## Find segments EITHER OF whose endpoints lie in 'w' ...
     okedge <- vertinside[from] | vertinside[to]
@@ -626,3 +693,33 @@ crossing.linnet <- function(X, Y) {
 density.linnet <- function(x, ...) {
   density.psp(as.psp(x), ...)
 }
+
+terminalvertices <- function(L) {
+  ## identify terminal vertices and return them as an lpp object
+  verifyclass(L, "linnet")
+  ind <- which(vertexdegree(L) == 1)
+  nV <- length(ind)
+  if(nV == 0) {
+    ## return empty pattern
+    return(lpp(L=L))
+  }
+  V <- vertices(L)[ind]
+  ## construct network coordinates
+  seg <- rep(NA_integer_, nV)
+  tp  <- rep(NA_real_,    nV)
+  ## look for vertices mentioned as the start of a segment
+  left <- match(ind, L$from)
+  found <- !is.na(left)
+  seg[found] <- left[found]
+  tp[found] <- 0
+  ## look for vertices mentioned as the end of a segment
+  right <- match(ind, L$to)
+  found <- !is.na(right)
+  seg[found] <- right[found]
+  tp[found] <- 1
+  ## pack up
+  df <- cbind(coords(V), data.frame(seg=seg, tp=tp))
+  B <- lpp(df, L)
+  return(B)
+}
+  

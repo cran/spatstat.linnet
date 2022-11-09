@@ -15,8 +15,11 @@ rhohat.lpp <- rhohat.lppm <-
            horvitz=FALSE,
            smoother=c("kernel", "local",
                       "decreasing", "increasing",
+                      "mountain", "valley",
                       "piecewise"),
            subset=NULL,
+           do.CI=TRUE,
+           jitter=TRUE, jitterfactor=1, interpolate=TRUE,
            nd=1000, eps=NULL, random=TRUE, 
            n=512, bw="nrd0", adjust=1, from=NULL, to=NULL, 
            bwref=bw, covname, confidence=0.95, positiveCI, breaks=NULL) {
@@ -32,10 +35,13 @@ rhohat.lpp <- rhohat.lppm <-
   # validate model
   if(is.lpp(object)) {
     X <- object
-    model <- lppm(object, ~1, eps=eps, nd=nd, random=random)
+    model <- eval(substitute(
+      lppm(object, ~1, eps=eps, nd=nd, random=random, subset=SUBSET),
+      list(SUBSET=subset)))
     reference <- "Lebesgue"
     modelcall <- NULL
   } else if(inherits(object, "lppm")) {
+    if(!is.null(subset)) object <- update(object, subset=subset)
     model <- object
     X <- model$X
     reference <- "model"
@@ -58,6 +64,8 @@ rhohat.lpp <- rhohat.lppm <-
            stop("Unrecognised covariate name")
          )
     covunits <- unitname(X)
+  } else if(inherits(covariate, "distfunlpp")) {
+    covunits <- unitname(covariate)
   } else {
     covunits <- NULL
   }
@@ -67,12 +75,17 @@ rhohat.lpp <- rhohat.lppm <-
   totlen <- sum(lengths_psp(S))
   
   rhohatEngine(model, covariate, reference, totlen, ...,
+               do.CI=do.CI,
                subset=subset,
                weights=weights,
                method=method,
                horvitz=horvitz,
                smoother=smoother,
                resolution=list(nd=nd, eps=eps, random=random),
+               spatCovarArgs=list(clip.predict=FALSE,
+                                  jitter=jitter,
+                                  jitterfactor=jitterfactor,
+                                  interpolate=interpolate),
                n=n, bw=bw, adjust=adjust, from=from, to=to,
                bwref=bwref, covname=covname, covunits=covunits,
                confidence=confidence, positiveCI=positiveCI,

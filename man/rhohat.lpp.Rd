@@ -16,8 +16,11 @@
        weights=NULL,
        method=c("ratio", "reweight", "transform"),
        horvitz=FALSE,
-       smoother=c("kernel", "local", "decreasing", "increasing", "piecewise"),
-       subset=NULL, 
+       smoother=c("kernel", "local", "decreasing", "increasing",
+                   "mountain", "valley", "piecewise"),
+       subset=NULL,
+       do.CI=TRUE, 
+       jitter=TRUE, jitterfactor=1, interpolate=TRUE,    
        nd=1000, eps=NULL, random=TRUE, 
        n = 512, bw = "nrd0", adjust=1, from = NULL, to = NULL,
        bwref=bw,
@@ -27,8 +30,11 @@
        weights=NULL,
        method=c("ratio", "reweight", "transform"),
        horvitz=FALSE,
-       smoother=c("kernel", "local", "decreasing", "increasing", "piecewise"),
+       smoother=c("kernel", "local", "decreasing", "increasing",
+                  "mountain", "valley", "piecewise"),
        subset=NULL, 
+       do.CI=TRUE, 
+       jitter=TRUE, jitterfactor=1, interpolate=TRUE,    
        nd=1000, eps=NULL, random=TRUE, 
        n = 512, bw = "nrd0", adjust=1, from = NULL, to = NULL,
        bwref=bw,
@@ -54,19 +60,47 @@
     a \code{function(x,y)} providing the weights.
   }
   \item{method}{
-    Character string determining the smoothing method. See Details.
+    Character string determining the estimation method. See Details.
   }
   \item{horvitz}{
     Logical value indicating whether to use Horvitz-Thompson weights.
     See Details.
   }
   \item{smoother}{
-    Character string determining the smoothing algorithm. See Details.
+    Character string determining the smoothing algorithm
+    and the type of curve that will be estimated. See Details.
   }
   \item{subset}{
     Optional. A spatial window (object of class \code{"owin"})
     specifying a subset of the data, from which the estimate should
     be calculated.
+  }
+  \item{do.CI}{
+    Logical value specifying whether to calculate standard errors
+    and confidence bands.
+  }
+  \item{jitter}{
+    Logical value. If \code{jitter=TRUE} (the default),
+    the values of the covariate at the
+    data points will be jittered (randomly perturbed by adding a small
+    amount of noise) using the function \code{\link[base]{jitter}}.
+    If \code{jitter=FALSE}, the covariate values at the data points will
+    not be altered. See the section on \emph{Randomisation and discretisation}.
+  }
+  \item{jitterfactor}{
+    Numeric value controlling the scale of jittering.
+    Passed to \code{\link[base]{jitter}} as the argument \code{factor}.
+  }
+  \item{interpolate}{
+    Logical value specifying whether to use spatial interpolation
+    to obtain the values of the covariate at the data points,
+    when the covariate is a pixel image
+    (object of class \code{"im"} or \code{"linim"}).
+    If \code{interpolate=FALSE}, the covariate value for each data point
+    is simply the value of the covariate image at the pixel centre that
+    is nearest to the data point. If \code{interpolate=TRUE}, the
+    covariate value for each data point is obtained by interpolating the
+    nearest pixel values using \code{\link[spatstat.geom]{interp.im}}.
   }
   \item{eps,nd,random}{
     Arguments controlling the pixel
@@ -167,24 +201,64 @@
   The argument \code{smoother} selects the type of estimation technique.
   \itemize{
     \item
-    If \code{smoother="kernel"} (the default) or \code{smoother="local"}, 
-    the nonparametric estimator is a \emph{smoothing estimator}
-    of \eqn{\rho(z)}{rho(z)}, effectively a kind of density estimator
-    (Baddeley et al, 2012).
+    If \code{smoother="kernel"} (the default),
+    the nonparametric estimator is a \emph{kernel smoothing estimator}
+    of \eqn{\rho(z)}{rho(z)} (Guan, 2008; Baddeley et al, 2012).
     The estimated function \eqn{\rho(z)}{rho(z)} will be
-    a smooth function of \eqn{z}.
-    Confidence bands are also computed, assuming a Poisson point process.
+    a smooth function of \eqn{z} which takes nonnegative values.
+    If \code{do.CI=TRUE} (the default),
+    confidence bands are also computed, assuming a Poisson point process.
     See the section on \emph{Smooth estimates}.
     \item
-    If \code{smoother="increasing"} or \code{smoother="decreasing"},
-    we use the \emph{nonparametric maximum likelihood estimator}
+    If \code{smoother="local"}, 
+    the nonparametric estimator is a \emph{local regression estimator}
+    of \eqn{\rho(z)}{rho(z)} (Baddeley et al, 2012) obtained using
+    local likelihood.
+    The estimated function \eqn{\rho(z)}{rho(z)} will be
+    a smooth function of \eqn{z}.
+    If \code{do.CI=TRUE} (the default),
+    confidence bands are also computed, assuming a Poisson point process.
+    See the section on \emph{Smooth estimates}.
+    \item
+    If \code{smoother="increasing"}, we assume that
+    \eqn{\rho(z)}{rho(z)} is an increasing function of \eqn{z},
+    and use the \emph{nonparametric maximum likelihood estimator}
     of \eqn{\rho(z)}{rho(z)} described by Sager (1982).
-    This assumes that
-    \eqn{\rho(z)}{rho(z)} is either an increasing function of \eqn{z},
-    or a decreasing function of \eqn{z}.
-    The estimated function will be a step function,
-    increasing or decreasing as a function of \eqn{z}.
+    The estimated function will be a step function, that is increasing
+    as a function of \eqn{z}. Confidence bands are not computed.
     See the section on \emph{Monotone estimates}.
+    \item
+    If \code{smoother="decreasing"}, we assume that
+    \eqn{\rho(z)}{rho(z)} is a decreasing function of \eqn{z},
+    and use the \emph{nonparametric maximum likelihood estimator}
+    of \eqn{\rho(z)}{rho(z)} described by Sager (1982).
+    The estimated function will be a step function, that is decreasing
+    as a function of \eqn{z}. Confidence bands are not computed.
+    See the section on \emph{Monotone estimates}.
+    \item
+    If \code{smoother="mountain"}, we assume that
+    \eqn{\rho(z)}{rho(z)} is a function with an inverted U shape,
+    with a single peak at a value \eqn{z_0}{z0}, so that
+    \eqn{\rho(z)}{rho(z)} is an increasing function of \eqn{z} 
+    for \eqn{z < z_0}{z < z0} and a decreasing function of \eqn{z}
+    for \eqn{z > z_0}{z > z0}.
+    We compute the \emph{nonparametric maximum likelihood estimator}.
+    The estimated function will be a step function, which is 
+    increasing and then decreasing as a function of \eqn{z}.
+    Confidence bands are not computed.
+    See the section on \emph{Unimodal estimates}.
+    \item
+    If \code{smoother="valley"}, we assume that
+    \eqn{\rho(z)}{rho(z)} is a function with a U shape,
+    with a single minimum at a value \eqn{z_0}{z0}, so that
+    \eqn{\rho(z)}{rho(z)} is a decreasing function of \eqn{z} 
+    for \eqn{z < z_0}{z < z0} and an increasing function of \eqn{z}
+    for \eqn{z > z_0}{z > z0}.
+    We compute the \emph{nonparametric maximum likelihood estimator}.
+    The estimated function will be a step function, which is 
+    decreasing and then increasing as a function of \eqn{z}.
+    Confidence bands are not computed.
+    See the section on \emph{Unimodal estimates}.
     \item
     If \code{smoother="piecewise"}, the estimate of
     \eqn{\rho(z)}{rho(z)} is piecewise constant.
@@ -197,6 +271,8 @@
     values is simply the average intensity
     (number of points per unit length) in the relevant sub-region
     of the network.
+    If \code{do.CI=TRUE} (the default),
+    confidence bands are also computed, assuming a Poisson point process.
   }
   See Baddeley (2018) for a comparison of these estimation techniques
   for two-dimensional point patterns.
@@ -285,8 +361,9 @@
   each data point is weighted by the reciprocal of the
   baseline value or fitted intensity value at that data point;
   and a corresponding adjustment is made to the denominator.
-  
-  Pointwise confidence intervals for the true value of \eqn{\rho(z)}
+
+  If \code{do.CI=TRUE} (the default),
+  pointwise confidence intervals for the true value of \eqn{\rho(z)}
   are also calculated for each \eqn{z},
   and will be plotted as grey shading.
   The confidence intervals are derived using the central limit theorem,
@@ -339,6 +416,52 @@
   Confidence intervals are not available
   for the monotone estimators.
 }
+\section{Unimodal estimators}{
+  If \code{smoother="valley"} then we estimate a U-shaped function.
+  A function \eqn{\rho(z)}{rho(z)} is U-shaped if it is
+  decreasing when \eqn{z < z_0}{z < z0} and
+  increasing when \eqn{z > z_0}{z > z0}, where \eqn{z_0}{z0} is
+  called the critical value. The nonparametric maximum likelihood
+  estimate of such a function can be computed by profiling over \eqn{z_0}{z0}. 
+  The algorithm considers all possible candidate values of the critical value 
+  \eqn{z_0}{z0}, and estimates the function \eqn{\rho(z)}{rho(z)}
+  separately on the left and right of \eqn{z_0}{z0} using the monotone
+  estimators described above. These function estimates are combined into
+  a single function, and the Poisson point process likelihood is
+  computed. The optimal value of \eqn{z_0}{z0}
+  is the one which maximises the Poisson point process likelihood.
+
+  If \code{smoother="mountain"}  then we estimate a function which has
+  an inverted U shape. A function \eqn{\rho(z)}{rho(z)} is
+  inverted-U-shaped if it is
+  increasing when \eqn{z < z_0}{z < z0} and
+  decreasing when \eqn{z > z_0}{z > z0}. The nonparametric maximum likelihood
+  estimate of such a function can be computed by profiling over
+  \eqn{z_0}{z0} using the same technique \emph{mutatis mutandis}.
+
+  Confidence intervals are not available for the unimodal estimators.
+}
+\section{Randomisation}{
+  By default, \code{rhohat} adds a small amount of random noise to the
+  data. This is designed to suppress the effects of
+  discretisation in pixel images.
+
+  This strategy means that \code{rhohat}
+  does not produce exactly the same result when the computation is
+  repeated. If you need the results to be exactly reproducible, set
+  \code{jitter=FALSE} and \code{random=FALSE}.
+
+  The values of the covariate \emph{at the data points}
+  are randomly perturbed by adding a small amount
+  of noise using the function \code{\link[base]{jitter}}. To reduce this
+  effect, set \code{jitterfactor} to a number smaller than 1. To
+  suppress this effect entirely, set \code{jitter=FALSE}.
+
+  The values of the covariate \emph{along the network}
+  are sampled at a regularly-spaced grid on the network.
+  The grid starts from a random position on each segment of
+  the network. To suppress this behaviour, set \code{random=FALSE}.
+}
 \value{
   A function value table (object of class \code{"fv"})
   containing the estimated values of \eqn{\rho}{rho}
@@ -390,9 +513,9 @@
   Nonparametric maximum likelihood algorithm by \adrian.
 }
 \seealso{
-  \code{\link[spatstat.core]{rho2hat}},
-  \code{\link[spatstat.core]{methods.rhohat}},
-  \code{\link[spatstat.core]{parres}}.
+  \code{\link[spatstat.explore]{rho2hat}},
+  \code{\link[spatstat.explore]{methods.rhohat}},
+  \code{\link[spatstat.model]{parres}}.
 
   See \code{\link{lppm}} for a parametric method for the same problem.
 }
@@ -403,6 +526,11 @@
   ## do spiders prefer to be in the middle of a segment?
   teepee <- linfun(function(x,y,seg,tp){ tp }, domain(spiders))
   rhotee <- rhohat(spiders, teepee)
+  rhoteeM <- rhohat(spiders, teepee, smoother="mountain")
+  if(interactive()) {
+    plot(rhotee, main="Spider preference for mid-segment")
+    plot(rhoteeM, add=TRUE, .y ~ .x, lwd=3)
+  }
 }
 \keyword{spatial}
 \keyword{models}

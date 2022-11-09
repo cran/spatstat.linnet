@@ -1,7 +1,7 @@
 #
 # linearKmulti
 #
-# $Revision: 1.18 $ $Date: 2020/01/11 04:35:04 $
+# $Revision: 1.20 $ $Date: 2022/06/27 02:17:34 $
 #
 # K functions for multitype point pattern on linear network
 #
@@ -75,9 +75,10 @@ linearKmulti <- function(X, I, J, r=NULL, ..., correction="Ang") {
 #  lambdaI <- nI/lengthL
 #  lambdaJ <- nJ/lengthL
   # compute K
-  denom <- (nI * nJ - nIandJ)/lengthL
+  samplesize <- npairs <- (nI * nJ - nIandJ)
+  denom <- npairs/lengthL
   K <- linearKmultiEngine(X, I, J, r=r, denom=denom,
-                          correction=correction, ...)
+                          correction=correction, ..., samplesize=samplesize)
   # set appropriate y axis label
   correction <- attr(K, "correction")
   type <- if(correction == "Ang") "L" else "net"
@@ -165,8 +166,8 @@ linearKmulti.inhom <- function(X, I, J, lambdaI, lambdaJ,
   if(!any(I)) stop("no points satisfy I")
 
   # validate lambda vectors
-  lambdaI <- getlambda.lpp(lambdaI, X, subset=I, ...)
-  lambdaJ <- getlambda.lpp(lambdaJ, X, subset=J, ...)
+  lambdaI <- resolve.lambda.lpp(X, lambdaI, subset=I, ...)
+  lambdaJ <- resolve.lambda.lpp(X, lambdaJ, subset=J, ...)
 
   # compute K
   weightsIJ <- outer(1/lambdaI, 1/lambdaJ, "*")
@@ -187,8 +188,9 @@ linearKmulti.inhom <- function(X, I, J, lambdaI, lambdaJ,
 
 # .............. internal ...............................
 
-linearKmultiEngine <- function(X, I, J, ..., r=NULL, reweight=NULL, denom=1,
-                          correction="Ang", showworking=FALSE) {
+linearKmultiEngine <- function(X, I, J, ..., r=NULL, reweight=NULL,
+                               denom=1, samplesize=NULL, 
+                               correction="Ang", showworking=FALSE) {
   # ensure distance information is present
   X <- as.lpp(X, sparse=FALSE)
   # extract info about pattern
@@ -240,7 +242,8 @@ linearKmultiEngine <- function(X, I, J, ..., r=NULL, reweight=NULL, denom=1,
   #---  compile into K function ---
   if(correction == "none" && is.null(reweight)) {
     # no weights (Okabe-Yamada)
-    K <- compileK(DIJ, r, denom=denom, check=FALSE, fname=fname)
+    K <- compileK(DIJ, r, denom=denom, check=FALSE,
+                  fname=fname, samplesize=samplesize)
     K <- rebadge.as.crossfun(K, "K", "net", "I", "J")
     unitname(K) <- unitname(X)
     attr(K, "correction") <- correction
@@ -258,7 +261,8 @@ linearKmultiEngine <- function(X, I, J, ..., r=NULL, reweight=NULL, denom=1,
   }
   # compute K
   wt <- if(!is.null(reweight)) edgewt * reweight else edgewt
-  K <- compileK(DIJ, r, weights=wt, denom=denom, check=FALSE, fname=fname)
+  K <- compileK(DIJ, r, weights=wt, denom=denom, check=FALSE,
+                fname=fname, samplesize=samplesize)
   ## rebadge and tweak
   K <- rebadge.as.crossfun(K, "K", "L", "I", "J")
   fname <- attr(K, "fname")
