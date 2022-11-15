@@ -1,6 +1,6 @@
 Package: spatstat.linnet
-Version: 3.0-2
-Date: 2022-11-08
+Version: 3.0-3
+Date: 2022-11-12
 Title: Linear Networks Functionality of the 'spatstat' Family
 Authors@R: c(person("Adrian", "Baddeley", 
                     role = c("aut", "cre", "cph"),
@@ -47,7 +47,7 @@ URL: http://spatstat.org/
 NeedsCompilation: yes
 ByteCompile: true
 BugReports: https://github.com/spatstat/spatstat.linnet/issues
-Packaged: 2022-11-08 00:48:02 UTC; adrian
+Packaged: 2022-11-12 09:46:29 UTC; adrian
 Author: Adrian Baddeley [aut, cre, cph]
     (<https://orcid.org/0000-0001-9499-8382>),
   Rolf Turner [aut, cph] (<https://orcid.org/0000-0001-5521-5218>),
@@ -58,4 +58,4 @@ Author: Adrian Baddeley [aut, cre, cph]
   Suman Rakshit [ctb, cph],
   Ottmar Cronie [ctb]
 Repository: CRAN
-Date/Publication: 2022-11-09 10:00:02 UTC
+Date/Publication: 2022-11-15 19:00:02 UTC

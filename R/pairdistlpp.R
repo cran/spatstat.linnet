@@ -1,7 +1,7 @@
 #
 # pairdistlpp.R
 #
-#  $Revision: 1.22 $ $Date: 2022/05/21 09:52:11 $
+#  $Revision: 1.23 $ $Date: 2022/11/12 09:42:36 $
 #
 #
 #  pairdist.lpp
@@ -147,7 +147,7 @@ pairdist.lpp <- function(X, ..., method="C") {
                       nv = as.integer(nvert),
                       xv = as.double(Lvert$x),
                       yv = as.double(Lvert$y),
-                      ns = as.double(L$n),
+                      ns = as.integer(nseg),
                       from = as.integer(from0),
                       to = as.integer(to0),
                       dpath = as.double(dpath),

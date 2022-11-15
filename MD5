@@ -1,6 +1,6 @@
-5447bd3d98d28e67a8711158a73f79f1 *DESCRIPTION
+62bb2a0b2a284744c5ad297433b8502e *DESCRIPTION
 087e77b6ac76af4ecd9b1d84ca62d60f *NAMESPACE
-de58117764ee7c5f9b54a5eaa0cdeaf9 *NEWS
+0aa4c43bb19131d778a05fb72f5f3bb9 *NEWS
 4e2027728562a7df69a9558edfe5e958 *R/First.R
 996cc7d569033ee3b57e55ae3424c136 *R/Math.linim.R
 1fc702e828ad0fc7d13f01cc45f69d5d *R/Math.linimlist.R
@@ -43,7 +43,7 @@ cd9f1604c89c7a26d9713dae52dddd4d *R/lixellate.R
 6c5ed7cba0a5d3adc1d916d0483375db *R/nndistlpp.R
 409c82831a42208e5e97176c43f5053c *R/nnfromvertex.R
 7c991b3e96c24ed6e67e8e55d7d7e7df *R/nnfunlpp.R
-edd31298418c26c15078dd3879386111 *R/pairdistlpp.R
+aedc35710b3d05bf2f7e3d1005b64706 *R/pairdistlpp.R
 e8e7be10b221fd870809596dedbccf4c *R/perspex.R
 573f6b16155d7974257d028ceac4c252 *R/quickndirty.R
 4b13e0aa93c205533683cbadf439956b *R/rThomaslpp.R
@@ -58,7 +58,7 @@ e8e7be10b221fd870809596dedbccf4c *R/perspex.R
 b3c3d90d017e1fb9830bb9e20b76b07e *R/treebranches.R
 c322eb0238ba8347d3ac1238ce736ed1 *R/unstacklpp.R
 6f2f4dd6b46a2edd246daafc2d147f4e *inst/CITATION
-56942542d55c211fc5b9fbdb621cb8ed *inst/doc/packagesizes.txt
+0812dc30e3b5d7ca4c524e8d1068d2a4 *inst/doc/packagesizes.txt
 12e68895fef0d3aa0bde45a0ddbadfa4 *inst/ratfor/Makefile
 22e8a5189942ba190c13475b35459c7f *inst/ratfor/dppll.r
 6d471ec061ea91398ba16323de56b9db *inst/ratfor/inxypOld.r
@@ -236,7 +236,7 @@ b011aa8c5e2c85e35a38c60ee9993ca5 *src/lintileindex.c
 1c9d432fb7df93ba4880f3fa4e4b3524 *src/linvdist.h
 d4b735208d8b70140fb0f0d6c88c8751 *src/linvknndist.c
 4628479f9f8eb864d01c1c344440b3ff *src/lixel.c
-2ce60be2a7ea7c1c95eecd83ebe7f50d *src/proto.h
+52bb65b79325b497a0db0a1d87fd192d *src/proto.h
 5c127a9d5ddeaee8cc8f34b32218a3a5 *src/yesno.h
 58f0e18b507787935e10efee782f2010 *tests/testsAtoK.R
 e3e77599b5f203fa1062be3928cca5d9 *tests/testsL.R
