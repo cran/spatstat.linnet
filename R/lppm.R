@@ -3,7 +3,7 @@
 #
 #  Point process models on a linear network
 #
-#  $Revision: 1.50 $   $Date: 2022/08/26 03:14:35 $
+#  $Revision: 1.55 $   $Date: 2023/02/04 03:22:09 $
 #
 
 lppm <- function(X, ...) {
@@ -44,6 +44,8 @@ lppm.formula <- function(X, interaction=NULL, ..., data=NULL) {
   callenv <- list2env(as.list(data), parent=parent.frame())
   result <- eval(thecall, envir=callenv)
 
+  result$Xname <- short.deparse(Yexpr)
+  
   result$call <- cl
   result$callstring <- callstring
 
@@ -61,8 +63,14 @@ lppm.lpp <- function(X, ..., eps=NULL, nd=1000, random=FALSE) {
                   commasep(sQuote(resv[clash])),
                   "must not be used"))
   stopifnot(inherits(X, "lpp"))
-  Q <- linequad(X, eps=eps, nd=nd, random=random)
-  fit <- ppm(Q, ..., method="mpl", forcefit=TRUE)
+  quadarg <- substitute(linequad(X, eps=eps, nd=nd, random=random),
+                        list(X=substitute(X),
+                             eps=substitute(eps),
+                             nd=substitute(nd),
+                             random=substitute(random)))
+  fit <- do.call(ppm,
+                 list(quadarg, ..., method="mpl", forcefit=TRUE),
+                 envir=parent.frame())
   if(!is.poisson.ppm(fit))
     warning("Non-Poisson models currently use Euclidean distance")
   out <- list(X=X, fit=fit, Xname=Xname, call=cl, callstring=callstring)
@@ -187,24 +195,35 @@ coef.lppm <- function(object, ...) {
 }
 
 print.lppm <- function(x, ...) {
-  splat("Point process model on linear network")
-  print(x$fit)
   terselevel <- spatstat.options('terse')
-  if(waxlyrical('extras', terselevel))
-    splat("Original data:", x$Xname)
-  if(waxlyrical('gory', terselevel))
+  splat("Point process model on linear network")
+  if(waxlyrical('extras', terselevel)) {
+    splat("\tFitted to point pattern dataset", sQuote(x$Xname))
+    parbreak(terselevel)
+  }
+  print(x$fit, showname=FALSE)
+  parbreak(terselevel)
+  if(waxlyrical('gory', terselevel)) {
+    cat("Domain: ")
     print(as.linnet(x))
+  }
   return(invisible(NULL))
 }
 
 summary.lppm <- function(object, ...) {
   splat("Point process model on linear network")
+  splat("Fitted to point pattern dataset", sQuote(object$Xname))
+  cat("Internal fit: ")
   print(summary(object$fit))
   terselevel <- spatstat.options('terse')
-  if(waxlyrical('extras', terselevel))
+  if(waxlyrical('extras', terselevel)) {
+    parbreak(terselevel)
     splat("Original data:", object$Xname)
-  if(waxlyrical('gory', terselevel))
-    print(summary(as.linnet(object)))
+    if(waxlyrical('gory', terselevel)) {
+      cat("Domain: ")
+      print(summary(as.linnet(object)))
+    }
+  }
   return(invisible(NULL))
 }
 
@@ -245,6 +264,8 @@ update.lppm <- function(object, ...) {
       stop(paste("Arguments not understood:", npp, "lpp objects given"))
     X <- aargh[[ii]]
     aargh[[ii]] <- linequad(X)
+    Xexpr <- sys.call()[[ii+2L]] %orifnull% expression(X)
+    Xname <- short.deparse(Xexpr)
   }
   isfmla <- sapply(aargh, inherits, what="formula")
   if(any(isfmla)) {
@@ -258,6 +279,7 @@ update.lppm <- function(object, ...) {
       X <- eval(lhs, envir=list2env(list("."=X), parent=callframe))
       Qpos <- if(any(islpp)) ii else (length(aargh) + 1L)
       aargh[[Qpos]] <- linequad(X)
+      Xname <- short.deparse(lhs)
     }
     aargh[[jj]] <- rhs.of.formula(fmla)
   }
