@@ -1,7 +1,7 @@
 #
 # linearpcfmulti.R
 #
-# $Revision: 1.17 $ $Date: 2022/06/27 02:19:57 $
+# $Revision: 1.19 $ $Date: 2023/03/10 03:37:19 $
 #
 # pair correlation functions for multitype point pattern on linear network
 #
@@ -93,7 +93,9 @@ linearpcfmulti <- function(X, I, J, r=NULL, ..., correction="Ang") {
 # ................ inhomogeneous ............................
 
 linearpcfdot.inhom <- function(X, i, lambdaI, lambdadot,
-                             r=NULL, ..., correction="Ang", normalise=TRUE) {
+                               r=NULL, ..., correction="Ang", normalise=TRUE,
+                               sigma=NULL, adjust.sigma=1,
+                               bw="nrd0", adjust.bw=1) {
   if(!is.multitype(X, dfok=FALSE)) 
 	stop("Point pattern must be multitype")
   marx <- marks(X)
@@ -104,8 +106,10 @@ linearpcfdot.inhom <- function(X, i, lambdaI, lambdadot,
   J <- rep(TRUE, npoints(X))  # i.e. all points
   # compute
   result <- linearpcfmulti.inhom(X, I, J, lambdaI, lambdadot, 
-                               r=r, correction=correction, normalise=normalise,
-                               ...)
+                                 r=r, correction=correction,
+                                 normalise=normalise,
+                                 sigma=sigma, adjust.sigma=adjust.sigma,
+                                 bw=bw, adjust.bw=adjust.bw, ...)
   correction <- attr(result, "correction")
   type <- if(correction == "Ang") "L, inhom" else "net, inhom"
   result <- rebadge.as.dotfun(result, "g", type, i)
@@ -115,7 +119,9 @@ linearpcfdot.inhom <- function(X, i, lambdaI, lambdadot,
 
 linearpcfcross.inhom <- function(X, i, j, lambdaI, lambdaJ,
                                r=NULL, ...,
-                               correction="Ang", normalise=TRUE) {
+                               correction="Ang", normalise=TRUE,
+                               sigma=NULL, adjust.sigma=1,
+                               bw="nrd0", adjust.bw=1) {
   if(!is.multitype(X, dfok=FALSE)) 
 	stop("Point pattern must be multitype")
   marx <- marks(X)
@@ -128,13 +134,17 @@ linearpcfcross.inhom <- function(X, i, j, lambdaI, lambdaJ,
   if(i == j) {
     I <- (marx == i)
     result <- linearpcfinhom(X[I], lambda=lambdaI, r=r,
-                           correction=correction, normalise=normalise, ...)
+                             correction=correction, normalise=normalise,
+                             sigma=sigma, adjust.sigma=adjust.sigma,
+                             bw=bw, adjust.bw=adjust.bw,...)
   } else {
     I <- (marx == i)
     J <- (marx == j)
     result <- linearpcfmulti.inhom(X, I, J, lambdaI, lambdaJ,
-                                 r=r, correction=correction,
-                                 normalise=normalise, ...)
+                                   r=r, correction=correction,
+                                   normalise=normalise,
+                                   sigma=sigma, adjust.sigma=adjust.sigma,
+                                   bw=bw, adjust.bw=adjust.bw,...)
   }
   # rebrand
   correction <- attr(result, "correction")
@@ -147,7 +157,9 @@ linearpcfcross.inhom <- function(X, i, j, lambdaI, lambdaJ,
 linearpcfmulti.inhom <- function(X, I, J, lambdaI, lambdaJ,
                                r=NULL, ...,
                                correction="Ang",
-                               normalise=TRUE) {
+                               normalise=TRUE,
+                               sigma=NULL, adjust.sigma=1,
+                               bw="nrd0", adjust.bw=1) {
   stopifnot(inherits(X, "lpp"))
   correction <- pickoption("correction", correction,
                            c(none="none",
@@ -168,15 +180,18 @@ linearpcfmulti.inhom <- function(X, I, J, lambdaI, lambdaJ,
   if(!any(I)) stop("no points satisfy I")
 
   # validate lambda vectors
-  lambdaI <- resolve.lambda.lpp(X, lambdaI, subset=I, ...)
-  lambdaJ <- resolve.lambda.lpp(X, lambdaJ, subset=J, ...)
+  lambdaI <- resolve.lambda.lpp(X, lambdaI, subset=I, ...,
+                                sigma=sigma, adjust=adjust.sigma)
+  lambdaJ <- resolve.lambda.lpp(X, lambdaJ, subset=J, ...,
+                                sigma=sigma, adjust=adjust.sigma)
 
   # compute pcf
   weightsIJ <- outer(1/lambdaI, 1/lambdaJ, "*")
   denom <- if(!normalise) lengthL else sum(1/lambdaI) 
   g <- linearPCFmultiEngine(X, I, J, r=r,
                             reweight=weightsIJ, denom=denom,
-                            correction=correction, ...)
+                            correction=correction, ...,
+                            bw=bw, adjust=adjust.bw)
   # set appropriate y axis label
   correction <- attr(g, "correction")
   type <- if(correction == "Ang") "L, inhom" else "net, inhom"

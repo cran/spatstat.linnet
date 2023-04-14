@@ -1,7 +1,7 @@
 #
 # linearpcf.R
 #
-# $Revision: 1.31 $ $Date: 2022/06/27 02:17:03 $
+# $Revision: 1.32 $ $Date: 2023/03/10 03:51:30 $
 #
 # pair correlation function for point pattern on linear network
 #
@@ -44,7 +44,9 @@ linearpcf <- function(X, r=NULL, ..., correction="Ang", ratio=FALSE) {
 
 linearpcfinhom <- function(X, lambda=NULL, r=NULL,  ...,
                            correction="Ang", normalise=TRUE, normpower=1,
-			   update=TRUE, leaveoneout=TRUE, ratio=FALSE) {
+			   update=TRUE, leaveoneout=TRUE,
+                           sigma=NULL, adjust.sigma=1,
+                           bw="nrd0", adjust.bw=1, ratio=FALSE) {
   stopifnot(inherits(X, "lpp"))
   loo.given <- !missing(leaveoneout)
   correction <- pickoption("correction", correction,
@@ -52,8 +54,13 @@ linearpcfinhom <- function(X, lambda=NULL, r=NULL,  ...,
                              Ang="Ang",
                              best="Ang"),
                            multi=FALSE)
-  if(is.null(lambda))
-    linearpcf(X, r=r, ..., correction=correction, ratio=ratio)
+  if(is.null(lambda)) 
+    warn.once("linearpcfinhomNULL",
+              "In linearpcfinhom the interpretation of 'lambda=NULL'",
+              "has changed (in spatstat.linnet 3.1 and later);",
+              "the function linearpcf is no longer invoked;",
+              "instead the intensity lambda is estimated by kernel smoothing")
+
   if(normalise) {
     check.1.real(normpower)
     stopifnot(normpower >= 1)
@@ -61,19 +68,24 @@ linearpcfinhom <- function(X, lambda=NULL, r=NULL,  ...,
   # extract info about pattern
   lengthL <- volume(domain(X))
   #
-  lambdaX <- resolve.lambda.lpp(X, lambda, ...,
-                           update=update, leaveoneout=leaveoneout,
-                           loo.given=loo.given,
-                           lambdaname="lambda")
+  lambdaX <- resolve.lambda.lpp(X, lambda,
+                                update=update,
+                                leaveoneout=leaveoneout,
+                                loo.given=loo.given,
+                                sigma=sigma,
+                                lambdaname="lambda",
+                                adjust=adjust.sigma)
   #
   invlam <- 1/lambdaX
   invlam2 <- outer(invlam, invlam, "*")
   denom <- if(!normalise) lengthL else
            if(normpower == 1) sum(invlam) else
            lengthL * (sum(invlam)/lengthL)^normpower
-  g <- linearpcfengine(X, ..., r=r,
+  g <- linearpcfengine(X, ..., r=r, 
                        reweight=invlam2, denom=denom,
-		       correction=correction, ratio=ratio)
+		       correction=correction,
+                       bw=bw, adjust=adjust.bw,
+                       ratio=ratio)
   # extract bandwidth
   bw <- attr(g, "bw")
   correction <- attr(g, "correction") 

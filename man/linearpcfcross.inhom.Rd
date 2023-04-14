@@ -11,7 +11,9 @@
 }
 \usage{
 linearpcfcross.inhom(X, i, j, lambdaI, lambdaJ, r=NULL, \dots,
-                     correction="Ang", normalise=TRUE)
+                     correction="Ang", normalise=TRUE,
+                     sigma=NULL, adjust.sigma=1,
+                     bw="nrd0", adjust.bw=1)
 }
 \arguments{
   \item{X}{The observed point pattern, 
@@ -64,6 +66,23 @@ linearpcfcross.inhom(X, i, j, lambdaI, lambdaJ, r=NULL, \dots,
     the points of type \code{i}), which reduces the sampling variability.
     If \code{FALSE}, the denominator is the length of the network.
   }
+  \item{sigma}{
+    Smoothing bandwidth passed to \code{\link{density.lpp}}
+    for estimation of intensities when either \code{lambdaI} or
+    \code{lambdaJ} is \code{NULL}.
+  }
+  \item{adjust.sigma}{
+    Numeric value. \code{sigma} will be multiplied by this value.
+  }
+  \item{bw}{
+    Smoothing bandwidth (passed to \code{\link[stats]{density.default}})
+    for one-dimensional kernel smoothing of the pair correlation function.
+    Either a numeric value, or a character string recognised
+    by \code{\link[stats]{density.default}}.
+  }
+  \item{adjust.bw}{
+    Numeric value. \code{bw} will be multiplied by this value.
+  }
 }
 \value{
   An object of class \code{"fv"} (see \code{\link{fv.object}}).
@@ -84,13 +103,16 @@ linearpcfcross.inhom(X, i, j, lambdaI, lambdaJ, r=NULL, \dots,
   and the maximum \eqn{r} value must not exceed the radius of the
   largest disc contained in the window.
 
+  If \code{lambdaI} or \code{lambdaJ} is missing or \code{NULL}, it will
+  be estimated by kernel smoothing using \code{\link{density.lpp}}.
+
   If \code{lambdaI} or \code{lambdaJ} is a fitted point process model,
   the default behaviour is to update the model by re-fitting it to
   the data, before computing the fitted intensity.
   This can be disabled by setting \code{update=FALSE}.
 }
 \references{
-  Baddeley, A, Jammalamadaka, A. and Nair, G. (to appear)
+  Baddeley, A, Jammalamadaka, A. and Nair, G. (2014)
   Multitype point process analysis of spines on the
   dendrite network of a neuron.
   \emph{Applied Statistics} (Journal of the Royal Statistical
@@ -118,10 +140,7 @@ linearpcfcross.inhom(X, i, j, lambdaI, lambdaJ, r=NULL, \dots,
    # fit <- lppm(chicago ~marks + x)
    # linearpcfcross.inhom(chicago, "assault", "robbery", fit, fit)
 }
-\author{\adrian
-  
-  
-}
+\author{\adrian}
 \keyword{spatial}
 \keyword{nonparametric}
 

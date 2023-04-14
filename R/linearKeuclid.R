@@ -5,7 +5,7 @@
 #'
 #'    GNU Public Licence 2.0
 #'
-#'    $Revision: 1.8 $ $Date: 2022/06/27 02:16:56 $
+#'    $Revision: 1.10 $ $Date: 2023/03/10 03:44:50 $
 
 linearKEuclid <- function(X, r=NULL, ...) {
   stopifnot(inherits(X, "lpp"))
@@ -45,10 +45,16 @@ linearpcfEuclid <- function(X, r=NULL, ...) {
 
 linearKEuclidInhom <- function(X, lambda=NULL, r=NULL,  ...,
                           normalise=TRUE, normpower=2,
-			  update=TRUE, leaveoneout=TRUE) {
+			  update=TRUE, leaveoneout=TRUE, sigma=NULL) {
   stopifnot(inherits(X, "lpp"))
-  if(is.null(lambda))
-    linearKEuclid(X, r=r, ...)
+
+  if(is.null(lambda)) 
+    warn.once("linearKEuclidInhomNULL",
+              "In linearKEuclidInhom the interpretation of 'lambda=NULL'",
+              "has changed (in spatstat.linnet 3.1 and later);",
+              "the function linearKeuclid is no longer invoked;",
+              "instead the intensity lambda is estimated by kernel smoothing")
+
   if(normalise) {
     check.1.real(normpower)
     stopifnot(normpower >= 1)
@@ -57,7 +63,7 @@ linearKEuclidInhom <- function(X, lambda=NULL, r=NULL,  ...,
   lengthL <- volume(domain(X))
   #
   lambdaX <- resolve.lambda.lpp(X, lambda, ...,
-               update=update, leaveoneout=leaveoneout)
+               update=update, leaveoneout=leaveoneout, sigma=sigma)
   #
   invlam <- 1/lambdaX
   invlam2 <- outer(invlam, invlam, "*")
@@ -76,10 +82,18 @@ linearKEuclidInhom <- function(X, lambda=NULL, r=NULL,  ...,
 
 linearpcfEuclidInhom <- function(X, lambda=NULL, r=NULL,  ...,
                           normalise=TRUE, normpower=2,
-			  update=TRUE, leaveoneout=TRUE) {
+			  update=TRUE, leaveoneout=TRUE,
+                          sigma=NULL, adjust.sigma=1,
+                          bw="nrd0", adjust.bw=1) {
   stopifnot(inherits(X, "lpp"))
-  if(is.null(lambda))
-    linearpcfEuclid(X, r=r, ...)
+
+  if(is.null(lambda)) 
+    warn.once("linearpcfEuclidInhomNULL",
+              "In linearpcfEuclidInhom the interpretation of 'lambda=NULL'",
+              "has changed (in spatstat.linnet 3.1 and later);",
+              "the function linearpcfEuclid is no longer invoked;",
+              "instead the intensity lambda is estimated by kernel smoothing")
+
   if(normalise) {
     check.1.real(normpower)
     stopifnot(normpower >= 1)
@@ -88,7 +102,8 @@ linearpcfEuclidInhom <- function(X, lambda=NULL, r=NULL,  ...,
   lengthL <- volume(domain(X))
   #
   lambdaX <- resolve.lambda.lpp(X, lambda, ...,
-               update=update, leaveoneout=leaveoneout)
+                                update=update, leaveoneout=leaveoneout,
+                                sigma=sigma, adjust=adjust.sigma)
   #
   invlam <- 1/lambdaX
   invlam2 <- outer(invlam, invlam, "*")
@@ -96,7 +111,8 @@ linearpcfEuclidInhom <- function(X, lambda=NULL, r=NULL,  ...,
            if(normpower == 1) sum(invlam) else
            lengthL * (sum(invlam)/lengthL)^normpower
   g <- linearEuclidEngine(X, "g", ...,
-                          r=r, reweight=invlam2, denom=denom)
+                          r=r, reweight=invlam2, denom=denom,
+                          bw=bw, adjust=adjust.bw)
   # extract bandwidth
   bw <- attr(g, "bw")
   # set appropriate y axis label
