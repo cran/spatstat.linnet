@@ -10,6 +10,10 @@
 \alias{as.linfun.linfun}
 \alias{as.owin.lintess}
 \alias{default.linnet.tolerance}
+\alias{getglmdata.lppm}
+\alias{getglmfit.lppm}
+\alias{getglmsubset.lppm}
+\alias{hasglmfit.lppm}
 \alias{makeLinnetTolerance}
 \alias{print.lintess}
 \alias{print.summary.linim}
@@ -55,6 +59,7 @@
 \alias{Complex.linimlist}
 \alias{LinimOp}
 \alias{LinimListOp}
+\alias{traceTessLinnet}
 
 
 %%%%%%%
@@ -74,6 +79,10 @@ FDMKERNEL(lppobj, dtt, dtx, M, nsave, weights,
           stepnames, setuponly, verbose)
 \method{as.linfun}{linfun}(X, \dots)
 \method{as.owin}{lintess}(W, \dots)
+\method{getglmdata}{lppm}(object, \dots)
+\method{getglmfit}{lppm}(object, \dots)
+\method{getglmsubset}{lppm}(object, \dots)
+\method{hasglmfit}{lppm}(object)
 default.linnet.tolerance(L)
 makeLinnetTolerance(toler)
 \method{print}{lintess}(x, \dots)
@@ -149,6 +158,7 @@ qkdeEngine(x, sigma, \dots, at, what,
 %NAMESPACE S3method("Summary", "linimlist")
 LinimOp(e1, e2, op)
 LinimListOp(e1, e2, op)
+traceTessLinnet(A, L)
 
 }
 \details{

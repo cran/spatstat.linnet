@@ -1,6 +1,6 @@
-54f9cc53f70cb2b3ffc0d1d831112808 *DESCRIPTION
-448bd1b7cfa3d54d46167b705b02fbc0 *NAMESPACE
-16dc2d7647d083a7aa0c89f759ced1f9 *NEWS
+fd40eeac58ca647e848a1ce6ab7179cc *DESCRIPTION
+8c79229d2e16cc3935dd54767ecd3c15 *NAMESPACE
+4443ec5e4f22bad128ca58f0427b2f36 *NEWS
 4e2027728562a7df69a9558edfe5e958 *R/First.R
 996cc7d569033ee3b57e55ae3424c136 *R/Math.linim.R
 1fc702e828ad0fc7d13f01cc45f69d5d *R/Math.linimlist.R
@@ -15,7 +15,7 @@ bf0cf5da514162d8f6a50534ac800771 *R/crossdistlpp.R
 0afcdf04db770c632bc8b0cdbad82969 *R/density.loo.R
 d24bb7b1a2b89423fd4184a82ea6080a *R/density.lpp.R
 9d6c28d09176da620f9c0b17f75fa1dd *R/densityfunlpp.R
-a466c687de5e192c49fa1fb4beb63b0e *R/densitylppVoronoi.R
+896fde8c1ab71fdaa42636680e04eeca *R/densitylppVoronoi.R
 2874473eeb4ecea9d3eb2121f084735c *R/distfunlpp.R
 1e6307d7119b9614d9b7eba8a784ca70 *R/envelopelpp.R
 78f6e1a69d54b7fb644f272698acecbf *R/evalcovarlppm.R
@@ -36,10 +36,10 @@ c8e2b4fa023c370e7ba6eb5ed7817df3 *R/linim.R
 da52f6b3cf41c57b7aec7e406bd6a49f *R/linnet.R
 801f9ebc380ae2c1bc80e70d703f1e11 *R/linnetsurgery.R
 cb08cd8c130ee49fbbaf67fbc3212b73 *R/lintess.R
-61578189acfc370af73fd3011605c032 *R/lintessmakers.R
+4d3250099cb61b3cbfbf536ab81655f2 *R/lintessmakers.R
 cd9f1604c89c7a26d9713dae52dddd4d *R/lixellate.R
 8e8cb292fc82893df7a82065c460f680 *R/lpp.R
-248088782abe359b10c437104c14111b *R/lppm.R
+ee7c4d4ef018dec5b52708af1b23ef93 *R/lppm.R
 6c5ed7cba0a5d3adc1d916d0483375db *R/nndistlpp.R
 409c82831a42208e5e97176c43f5053c *R/nnfromvertex.R
 7c991b3e96c24ed6e67e8e55d7d7e7df *R/nnfunlpp.R
@@ -58,7 +58,7 @@ cf75f6c598cf37410f8dde07f2ef849d *R/relrisk.lpp.R
 b3c3d90d017e1fb9830bb9e20b76b07e *R/treebranches.R
 c322eb0238ba8347d3ac1238ce736ed1 *R/unstacklpp.R
 f2d49fc8f50fef7f76bcb3fc7f34efb4 *inst/CITATION
-3c030c037d8324716bd2cae62957b975 *inst/doc/packagesizes.txt
+b1f5107a42229e8e619a826099dbfa49 *inst/doc/packagesizes.txt
 12e68895fef0d3aa0bde45a0ddbadfa4 *inst/ratfor/Makefile
 22e8a5189942ba190c13475b35459c7f *inst/ratfor/dppll.r
 6d471ec061ea91398ba16323de56b9db *inst/ratfor/inxypOld.r
@@ -119,7 +119,7 @@ f9c267dcbd153afc80cd79b48987d85e *man/heatkernelapprox.Rd
 ff5f99f553da23bfaf7994e3d9188f0d *man/insertVertices.Rd
 9406dfd349134223df4b123aff9b83d8 *man/integral.linim.Rd
 2357cb69b287b5a38abcc2108b41de27 *man/intensity.lpp.Rd
-e1bdbdcc6b4029ac33ae37c55f63a594 *man/intersect.lintess.Rd
+a69abfea5c5142d18d0e8acd4ca0881e *man/intersect.lintess.Rd
 da6a99ec17f6bc316e40dc5debd2217c *man/is.connected.linnet.Rd
 a1ef9c24b08b77165b53e8227c546ce3 *man/is.marked.lppm.Rd
 f36221e61b35b088b812bc010f3d1f8e *man/is.multitype.lpp.Rd
@@ -152,7 +152,7 @@ d60ff3da330cd4e21f4ec743945025a0 *man/linequad.Rd
 c0760987f9732e8f3e703c8b65e00b05 *man/linfun.Rd
 5942379c61c62d6739e365e6039d17b6 *man/linim.Rd
 0633bb10b83b4e5e75bea4151cafe0b4 *man/linnet.Rd
-24cd105849fec085a066b56af2d0598b *man/lintess.Rd
+b692e24f5e1b18f539e06fd44fd35978 *man/lintess.Rd
 cc314c90ddb3ebc15144776d5d532b6e *man/lixellate.Rd
 12dd6fe1350d3c77cdefee9155143bc6 *man/lpp.Rd
 70ac586cd56023055a0d993581ad8efc *man/lppm.Rd
@@ -199,8 +199,8 @@ aefefa4bcfecdc76d2e133fece7c5565 *man/rpoislpp.Rd
 92f53b181df904f87c838cbdae8a67c1 *man/sdr.lpp.Rd
 f5739b9989f0d0f62207a1051ff9074e *man/simulate.lppm.Rd
 bd9bea1ab8443fa6e99c8894d61f3d3b *man/spatstat.linnet-deprecated.Rd
-f36618c51a7e9c3df79b55b15bc1468e *man/spatstat.linnet-internal.Rd
-3f324979a5e534277f726755b30c98d9 *man/spatstat.linnet-package.Rd
+3bb3ff8897ffa2efb82203e57e38e5bd *man/spatstat.linnet-internal.Rd
+15eebba124a95c5086f6895927ac8d11 *man/spatstat.linnet-package.Rd
 b562e7dc79c1e5ecbe54e4840e4976b5 *man/subset.lpp.Rd
 bc00c0e4fecee09f0c08f2842934985f *man/superimpose.lpp.Rd
 9d9f8fdbe56ec648e33c66d095bc2160 *man/terminalvertices.Rd
@@ -238,6 +238,6 @@ d4b735208d8b70140fb0f0d6c88c8751 *src/linvknndist.c
 4628479f9f8eb864d01c1c344440b3ff *src/lixel.c
 52bb65b79325b497a0db0a1d87fd192d *src/proto.h
 5c127a9d5ddeaee8cc8f34b32218a3a5 *src/yesno.h
-85af809c82cf75e47608c521a83dd987 *tests/testsAtoK.R
+7a4a5a6e67b0d6c10c6bcb32e2da82b4 *tests/testsAtoK.R
 e3e77599b5f203fa1062be3928cca5d9 *tests/testsL.R
 5f00829cfe691c63e5c202d60ef5bf81 *tests/testsMtoZ.R
