@@ -1,6 +1,6 @@
-fd40eeac58ca647e848a1ce6ab7179cc *DESCRIPTION
+a196dd5eced2b8b2c2573b1c8edc5e05 *DESCRIPTION
 8c79229d2e16cc3935dd54767ecd3c15 *NAMESPACE
-4443ec5e4f22bad128ca58f0427b2f36 *NEWS
+f87d4ba0b264f760f57c8e6305641df3 *NEWS
 4e2027728562a7df69a9558edfe5e958 *R/First.R
 996cc7d569033ee3b57e55ae3424c136 *R/Math.linim.R
 1fc702e828ad0fc7d13f01cc45f69d5d *R/Math.linimlist.R
@@ -33,12 +33,12 @@ f2f04bfaec86cf00552471bb235c43db *R/linearmrkcon.R
 ffd0c46d7c442a7844539e5e7eb844d2 *R/linequad.R
 b1967b32cca9d08eaa69aa63dd544aca *R/linfun.R
 c8e2b4fa023c370e7ba6eb5ed7817df3 *R/linim.R
-da52f6b3cf41c57b7aec7e406bd6a49f *R/linnet.R
+b3369fcfda7e66c54ef5cc2613da176b *R/linnet.R
 801f9ebc380ae2c1bc80e70d703f1e11 *R/linnetsurgery.R
 cb08cd8c130ee49fbbaf67fbc3212b73 *R/lintess.R
 4d3250099cb61b3cbfbf536ab81655f2 *R/lintessmakers.R
 cd9f1604c89c7a26d9713dae52dddd4d *R/lixellate.R
-8e8cb292fc82893df7a82065c460f680 *R/lpp.R
+8f947add0d5c845becab761c563a4d7f *R/lpp.R
 ee7c4d4ef018dec5b52708af1b23ef93 *R/lppm.R
 6c5ed7cba0a5d3adc1d916d0483375db *R/nndistlpp.R
 409c82831a42208e5e97176c43f5053c *R/nnfromvertex.R
@@ -58,7 +58,7 @@ cf75f6c598cf37410f8dde07f2ef849d *R/relrisk.lpp.R
 b3c3d90d017e1fb9830bb9e20b76b07e *R/treebranches.R
 c322eb0238ba8347d3ac1238ce736ed1 *R/unstacklpp.R
 f2d49fc8f50fef7f76bcb3fc7f34efb4 *inst/CITATION
-b1f5107a42229e8e619a826099dbfa49 *inst/doc/packagesizes.txt
+6eb3e6b95c5f44c8b8541d2381b8bf8c *inst/doc/packagesizes.txt
 12e68895fef0d3aa0bde45a0ddbadfa4 *inst/ratfor/Makefile
 22e8a5189942ba190c13475b35459c7f *inst/ratfor/dppll.r
 6d471ec061ea91398ba16323de56b9db *inst/ratfor/inxypOld.r

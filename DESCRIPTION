@@ -1,6 +1,6 @@
 Package: spatstat.linnet
-Version: 3.1-4
-Date: 2024-02-04
+Version: 3.1-5
+Date: 2024-03-24
 Title: Linear Networks Functionality of the 'spatstat' Family
 Authors@R: c(person("Adrian", "Baddeley", 
                     role = c("aut", "cre", "cph"),
@@ -25,11 +25,11 @@ Authors@R: c(person("Adrian", "Baddeley",
 	     person("Ottmar", "Cronie",
 	            role = "ctb"))
 Maintainer: Adrian Baddeley <Adrian.Baddeley@curtin.edu.au>
-Depends: R (>= 3.5.0), spatstat.data (>= 3.0), spatstat.geom (>=
-        3.2-7), spatstat.random (>= 3.2-1), spatstat.explore (>=
-        3.2-5), spatstat.model (>= 3.2-9), stats, graphics, grDevices,
+Depends: R (>= 3.5.0), spatstat.data (>= 3.0-4), spatstat.geom (>=
+        3.2-9), spatstat.random (>= 3.2-3), spatstat.explore (>=
+        3.2-7), spatstat.model (>= 3.2-11), stats, graphics, grDevices,
         methods, utils
-Imports: spatstat.utils (>= 3.0-3), Matrix, spatstat.sparse (>= 3.0)
+Imports: spatstat.utils (>= 3.0-4), Matrix, spatstat.sparse (>= 3.0-3)
 Suggests: goftest, locfit, spatstat (>= 3.0)
 Description: Defines types of spatial data on a linear network
 	     and provides functionality for geometrical operations,
@@ -46,7 +46,7 @@ URL: http://spatstat.org/
 NeedsCompilation: yes
 ByteCompile: true
 BugReports: https://github.com/spatstat/spatstat.linnet/issues
-Packaged: 2024-02-04 07:16:18 UTC; adrian
+Packaged: 2024-03-24 00:58:11 UTC; adrian
 Author: Adrian Baddeley [aut, cre, cph]
     (<https://orcid.org/0000-0001-9499-8382>),
   Rolf Turner [aut, cph] (<https://orcid.org/0000-0001-5521-5218>),
@@ -57,4 +57,4 @@ Author: Adrian Baddeley [aut, cre, cph]
   Suman Rakshit [ctb, cph],
   Ottmar Cronie [ctb]
 Repository: CRAN
-Date/Publication: 2024-02-04 07:50:03 UTC
+Date/Publication: 2024-03-25 06:50:02 UTC
