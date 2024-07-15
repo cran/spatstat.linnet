@@ -17,7 +17,7 @@ cat(paste("--------- Executing",
 #
 # Tests for lpp code
 #
-#  $Revision: 1.71 $  $Date: 2022/06/27 02:43:58 $
+#  $Revision: 1.72 $  $Date: 2024/06/05 09:11:58 $
 
 
 local({
@@ -195,7 +195,12 @@ local({
     X0 <- insertVertices(X, x=numeric(0), y=numeric(0))
     ## vertices on boundary of new window
     LL <- simplenet[boundingbox(vertices(simplenet))]
-  
+
+    ## thinNetwork for lpp and linim
+    Xthin <- thinNetwork(X, retainedges=1:3)
+    D <- density(X, 0.1)
+    Dthin <- thinNetwork(D, retainedges=1:3)
+    
     ## Test [.lpp internal data
     B <- owin(c(0.1,0.7),c(0.19,0.6))
     XB <- X[B]
