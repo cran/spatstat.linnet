@@ -1,6 +1,6 @@
-1cd5866496001b30756f0bb3e9989949 *DESCRIPTION
+f488694dbf4e05c9a39dcdb633cb18b0 *DESCRIPTION
 528072f87027bedd792c40b02e3089ba *NAMESPACE
-2567e1c83c569f72ebbc2b5c2dfc822c *NEWS
+b1ecb060a871be28a20c93aecedecabb *NEWS
 4e2027728562a7df69a9558edfe5e958 *R/First.R
 996cc7d569033ee3b57e55ae3424c136 *R/Math.linim.R
 1fc702e828ad0fc7d13f01cc45f69d5d *R/Math.linimlist.R
@@ -60,8 +60,8 @@ bf6017983bb2c1d089d3250028b0ce1b *R/relrisk.lpp.R
 b3c3d90d017e1fb9830bb9e20b76b07e *R/treebranches.R
 c322eb0238ba8347d3ac1238ce736ed1 *R/unstacklpp.R
 f2d49fc8f50fef7f76bcb3fc7f34efb4 *inst/CITATION
-ec0a05201439ea7f0c5a4508b59bc87f *inst/doc/packagesizes.txt
-ec0a05201439ea7f0c5a4508b59bc87f *inst/info/packagesizes.txt
+d4075f4db35e6b9f24754c9dfa335153 *inst/doc/packagesizes.txt
+d4075f4db35e6b9f24754c9dfa335153 *inst/info/packagesizes.txt
 12e68895fef0d3aa0bde45a0ddbadfa4 *inst/ratfor/Makefile
 22e8a5189942ba190c13475b35459c7f *inst/ratfor/dppll.r
 6d471ec061ea91398ba16323de56b9db *inst/ratfor/inxypOld.r
@@ -87,7 +87,7 @@ e087be57f72363922dd259fba1fadf67 *man/auc.lpp.Rd
 34bfe7bb20f5983fe4266325b268d30b *man/begins.Rd
 a0a2553aae0aefaae2c5806e982a8487 *man/berman.test.lpp.Rd
 eabd2436798b6d28f2a2ade987e1d907 *man/branchlabelfun.Rd
-8e48eb97b84f6d658b5020c172051bb6 *man/bw.lppl.Rd
+a5ecd18b123d38ddfb768bb94d0586be *man/bw.lppl.Rd
 5efa421a530a5f4fecf2b4a9f6836aed *man/bw.relrisk.lpp.Rd
 0f9a8c88480303bbd030ea5cff7473b8 *man/bw.voronoi.Rd
 2d6aaad1a775ce17cd74302f5f5b8d2e *man/cdf.test.lpp.Rd
@@ -203,7 +203,7 @@ caa42e6ffd8586b5e3dd71364b954a04 *man/rlpp.Rd
 f5739b9989f0d0f62207a1051ff9074e *man/simulate.lppm.Rd
 50fe4582a3c53ce6e16df691c6dbfe6e *man/spatstat.linnet-deprecated.Rd
 6495f245b82a703918cd879024ac6aea *man/spatstat.linnet-internal.Rd
-3560ffca7695ff5524156bf04771951c *man/spatstat.linnet-package.Rd
+7a60ad38b3b435458e1979b45926ad86 *man/spatstat.linnet-package.Rd
 b562e7dc79c1e5ecbe54e4840e4976b5 *man/subset.lpp.Rd
 ca3d2d648e572d9ff7d8dc2c4533a069 *man/superimpose.lpp.Rd
 9d9f8fdbe56ec648e33c66d095bc2160 *man/terminalvertices.Rd
