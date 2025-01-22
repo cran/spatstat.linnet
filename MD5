@@ -1,6 +1,6 @@
-8a1c37ece406735757ac28355ab1e0aa *DESCRIPTION
+f45f7343a024b653e38abcf7df880227 *DESCRIPTION
 528072f87027bedd792c40b02e3089ba *NAMESPACE
-cca731ebb67d80b4e05a084c89df1352 *NEWS
+7e2805bc026740ee371bb4a424aa2e36 *NEWS
 4e2027728562a7df69a9558edfe5e958 *R/First.R
 996cc7d569033ee3b57e55ae3424c136 *R/Math.linim.R
 1fc702e828ad0fc7d13f01cc45f69d5d *R/Math.linimlist.R
@@ -61,8 +61,8 @@ e6b7c882fda62bbab129f43c35909315 *R/shortestpath.R
 b3c3d90d017e1fb9830bb9e20b76b07e *R/treebranches.R
 c322eb0238ba8347d3ac1238ce736ed1 *R/unstacklpp.R
 f2d49fc8f50fef7f76bcb3fc7f34efb4 *inst/CITATION
-55291d3c93aa9fd892970dd239afc3d0 *inst/doc/packagesizes.txt
-55291d3c93aa9fd892970dd239afc3d0 *inst/info/packagesizes.txt
+096a86068e1d249a52eb6b09ea5ce117 *inst/doc/packagesizes.txt
+096a86068e1d249a52eb6b09ea5ce117 *inst/info/packagesizes.txt
 12e68895fef0d3aa0bde45a0ddbadfa4 *inst/ratfor/Makefile
 22e8a5189942ba190c13475b35459c7f *inst/ratfor/dppll.r
 6d471ec061ea91398ba16323de56b9db *inst/ratfor/inxypOld.r
@@ -111,8 +111,8 @@ d9f6c84aed3cd16cbcc4c8f9e74fe167 *man/densityEqualSplit.Rd
 f403f28b2ee1c9510f7cc3939ac96a38 *man/densityVoronoi.lpp.Rd
 dbe98821ba1db041e336dccebe539697 *man/densityfun.lpp.Rd
 e1b99024f072f6984aebb23ce2161f1f *man/diameter.linnet.Rd
-db8a03875205d010a8a0a4b04f92c53b *man/distfun.lpp.Rd
-e69e507e67edef546612997813eb3c50 *man/distmap.lpp.Rd
+a5fb51463c7e5d0d500e61f5f6f36b01 *man/distfun.lpp.Rd
+b753d3781439d919c13c8567ceb9ed79 *man/distmap.lpp.Rd
 3ada52c1f6edd323160b889e87f0c6af *man/divide.linnet.Rd
 da19e13e866b4c81911ecd48f96c2136 *man/domain.lpp.Rd
 5ae54a9f566e7fdf7ed687ea3d831dea *man/envelope.lpp.Rd
@@ -173,11 +173,11 @@ cda5e7a5a8662d476724793a67aa4d08 *man/model.frame.lppm.Rd
 6c01084c6736b9a4cc16039cc8cc0805 *man/model.images.lppm.Rd
 28ba8c756e935202d09f8088fa312756 *man/model.matrix.lppm.Rd
 b5b1416747831e195b3358b3b38fde19 *man/nncross.lpp.Rd
-9ac891049c78070d174de2c634e57424 *man/nndist.lpp.Rd
+b5e111571da83fd6d217de244f43f3c6 *man/nndist.lpp.Rd
 6f96676af04f6ce9098bbbce11655196 *man/nnfromvertex.Rd
 2871bf9a7b9ad9f9196907651dbafff4 *man/nnfun.lpp.Rd
 b376f879a5536e7754f35042804df3cc *man/nnwhich.lpp.Rd
-25c5056d93f05e91b93c1ae8b3cff5b2 *man/pairdist.lpp.Rd
+842bc0d64146873a786a40bf418fbf3f *man/pairdist.lpp.Rd
 069764edb710f36c1c44e85d131493f1 *man/pairs.linim.Rd
 6b7a2f2b62be4182c3f0a67b79d265b3 *man/persp.linfun.Rd
 11fc30c0eb224127a67794ff3ab29df6 *man/persp.linim.Rd
@@ -243,5 +243,5 @@ d4b735208d8b70140fb0f0d6c88c8751 *src/linvknndist.c
 52bb65b79325b497a0db0a1d87fd192d *src/proto.h
 5c127a9d5ddeaee8cc8f34b32218a3a5 *src/yesno.h
 7a4a5a6e67b0d6c10c6bcb32e2da82b4 *tests/testsAtoK.R
-336514e3994f18d7e2704a3f2e868855 *tests/testsL.R
+ada14c8679fc7ed3bd4c6923137bcbc1 *tests/testsL.R
 5f00829cfe691c63e5c202d60ef5bf81 *tests/testsMtoZ.R
