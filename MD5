@@ -1,6 +1,6 @@
-f45f7343a024b653e38abcf7df880227 *DESCRIPTION
+573eb8a1242a2ee74370f38bc10cfa5d *DESCRIPTION
 528072f87027bedd792c40b02e3089ba *NAMESPACE
-7e2805bc026740ee371bb4a424aa2e36 *NEWS
+e9eda0c1e83c3a0ea5a47433d493e2b4 *NEWS
 4e2027728562a7df69a9558edfe5e958 *R/First.R
 996cc7d569033ee3b57e55ae3424c136 *R/Math.linim.R
 1fc702e828ad0fc7d13f01cc45f69d5d *R/Math.linimlist.R
@@ -40,7 +40,7 @@ c4c18f5892ae5f8ba73f2f12709d6336 *R/linnetsurgery.R
 cb08cd8c130ee49fbbaf67fbc3212b73 *R/lintess.R
 4d3250099cb61b3cbfbf536ab81655f2 *R/lintessmakers.R
 cd9f1604c89c7a26d9713dae52dddd4d *R/lixellate.R
-273d323a2c3d0f87a4b2dc87392e7acc *R/lpp.R
+0d6bfd1c4c0226e4d3f27339d1b25dea *R/lpp.R
 ee7c4d4ef018dec5b52708af1b23ef93 *R/lppm.R
 6c5ed7cba0a5d3adc1d916d0483375db *R/nndistlpp.R
 409c82831a42208e5e97176c43f5053c *R/nnfromvertex.R
@@ -61,8 +61,8 @@ e6b7c882fda62bbab129f43c35909315 *R/shortestpath.R
 b3c3d90d017e1fb9830bb9e20b76b07e *R/treebranches.R
 c322eb0238ba8347d3ac1238ce736ed1 *R/unstacklpp.R
 f2d49fc8f50fef7f76bcb3fc7f34efb4 *inst/CITATION
-096a86068e1d249a52eb6b09ea5ce117 *inst/doc/packagesizes.txt
-096a86068e1d249a52eb6b09ea5ce117 *inst/info/packagesizes.txt
+0b0bad2620a11f6455b2a1fddd4431b9 *inst/doc/packagesizes.txt
+0b0bad2620a11f6455b2a1fddd4431b9 *inst/info/packagesizes.txt
 12e68895fef0d3aa0bde45a0ddbadfa4 *inst/ratfor/Makefile
 22e8a5189942ba190c13475b35459c7f *inst/ratfor/dppll.r
 6d471ec061ea91398ba16323de56b9db *inst/ratfor/inxypOld.r
@@ -160,7 +160,7 @@ b692e24f5e1b18f539e06fd44fd35978 *man/lintess.Rd
 cc314c90ddb3ebc15144776d5d532b6e *man/lixellate.Rd
 cffc8689763b4a0d923ad43c0378226c *man/lpp.Rd
 c637a3356e9cfcfe96632a21b402b4f5 *man/lppm.Rd
-1ac6f0faf463fc5c6d189b778ea36fc3 *man/macros/defns.Rd
+86394a54d161a4823e3defc3a7180c9d *man/macros/defns.Rd
 f022466369a3a7351996ca41a388c5b2 *man/marks.linnet.Rd
 81c2ba46236a30c810c8e99aa81ce505 *man/marks.lintess.Rd
 985eff8cdc047536acf0bb226ed306f6 *man/mean.linim.Rd
@@ -242,6 +242,6 @@ d4b735208d8b70140fb0f0d6c88c8751 *src/linvknndist.c
 4628479f9f8eb864d01c1c344440b3ff *src/lixel.c
 52bb65b79325b497a0db0a1d87fd192d *src/proto.h
 5c127a9d5ddeaee8cc8f34b32218a3a5 *src/yesno.h
-7a4a5a6e67b0d6c10c6bcb32e2da82b4 *tests/testsAtoK.R
+73e4da6c5a88d9ee23aa3b1702026f9d *tests/testsAtoK.R
 ada14c8679fc7ed3bd4c6923137bcbc1 *tests/testsL.R
 5f00829cfe691c63e5c202d60ef5bf81 *tests/testsMtoZ.R
