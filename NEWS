@@ -1,4 +1,73 @@
 
+        CHANGES IN spatstat.linnet VERSION 3.3-1
+
+OVERVIEW
+
+    o Minor changes to documents to satisfy CRAN package checker.
+
+
+        CHANGES IN spatstat.linnet VERSION 3.3-0
+
+OVERVIEW
+
+    o Extension of ROC curves.
+
+    o Interactively identify segments of a network.
+
+    o Interactively identify tiles of a tessellation on a network.
+
+NEW FUNCTIONS
+
+    o identify.linnet
+    Interactively identify segments of a network.
+    
+    o identify.lintess
+    Interactively identify tiles of a tessellation on a network.
+
+    o as.linfun.linnet
+    Create a function on a linear network which maps each network segment
+    to a specified value.
+    
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o roc.lpp
+    New argument 'baseline' allows calculation of ROC relative to a baseline.
+
+    o roc.lpp
+    New argument 'weights' for numerical weights on the data points.
+
+    o roc.lpp
+    New argument 'method' determines the estimation method.
+    New options include a kernel smoothing estimate and a monotone estimate.
+    
+    o roc.lpp
+    New arguments 'CI', 'alpha' for calculating confidence intervals.
+
+    o roc.lpp
+    New argument 'subset' specifies a sub-region of the spatial domain
+    in which the ROC should be calculated.
+
+    o roc.lppm
+    New argument 'baseline' allows calculation of ROC relative to a baseline.
+
+    o roc.lppm
+    New argument 'method' determines the estimation method.
+    New options include a kernel smoothing estimate and a monotone estimate.
+    
+    o roc.lppm
+    New arguments 'CI', 'alpha' for calculating confidence intervals.
+
+    o roc.lppm
+    New argument 'subset' specifies a sub-region of the spatial domain
+    in which the ROC should be calculated.
+
+    o roc.lppm
+    New argument 'leaveoneout' specifies whether to use leave-one-out estimates
+    of intensity at the data points.
+
+    o chop.linnet
+    Improved labels of tiles in the resulting tessellation.
+
         CHANGES IN spatstat.linnet VERSION 3.2-6
 
 OVERVIEW
