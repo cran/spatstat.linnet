@@ -1,7 +1,7 @@
 #
 # linim.R
 #
-#  $Revision: 1.86 $   $Date: 2025/06/14 03:35:24 $
+#  $Revision: 1.102 $   $Date: 2025/11/28 05:37:41 $
 #
 #  Image/function on a linear network
 #
@@ -64,7 +64,7 @@ linim <- function(L, Z, ..., restrict=TRUE, df=NULL) {
   out <- Z
   attr(out, "L") <- L
   attr(out, "df") <- df
-  class(out) <- c("linim", class(out))
+  class(out) <- unique(c("linim", class(out)))
   return(out)
 }
 
@@ -90,7 +90,7 @@ summary.linim <- function(object, ...) {
   if("integral" %in% names(y))
     y$integral <- integral(object)
   y$network <- summary(as.linnet(object))
-  class(y) <- c("summary.linim", class(y))
+  class(y) <- unique(c("summary.linim", class(y)))
   return(y)
 }
 
@@ -370,21 +370,34 @@ as.linim.default <- function(X, L, ..., eps = NULL, dimyx = NULL, xy = NULL,
                              rule.eps=c("adjust.eps",
                                         "grow.frame", "shrink.frame"),
                              delta = NULL, nd = NULL) {
-  stopifnot(inherits(L, "linnet"))
-  rule.eps <- match.arg(rule.eps)
-  Y <- as.im(X, W=Frame(L), ..., eps=eps, dimyx=dimyx, xy=xy, rule.eps=rule.eps)
-  M <- psp2mask(as.psp(L), as.owin(Y))
-  Y[complement.owin(M)] <- NA
   df <- NULL
-  if(!is.null(delta) || !is.null(nd)) {
-    if(is.null(delta)) delta <- volume(L)/nd
-    df <- pointsAlongNetwork(L, delta)
+  if(is.linim(L) && !is.null(attr(L, "df"))) {
+    ## use L as template
+    Y <- as.im(L, W=Frame(L), ..., xy=as.im(L))
+    df <- attr(L, "df")
+    L <- as.linnet(L)
+  } else {
+    ## construct template
+    rule.eps <- match.arg(rule.eps)
+    Y <- as.im(X, W=Frame(L), ...,
+               eps=eps, dimyx=dimyx, xy=xy, rule.eps=rule.eps)
+    M <- psp2mask(as.psp(L), as.owin(Y))
+    Y[complement.owin(M)] <- NA
+    if(!is.null(delta) || !is.null(nd)) {
+      if(is.null(delta)) delta <- volume(L)/nd
+      df <- pointsAlongNetwork(L, delta)
+      names(df)[names(df) == "seg"] <- "mapXY"
+    }
+  }
+  if(!is.null(df)) {
+    ## fill out entries in data frame
     pix <- nearest.valid.pixel(df$x, df$y, Y)
-    df$xc <- Y$xcol[pix$col]
-    df$yc <- Y$yrow[pix$row]
+    if(!all(c("xc", "yc") %in% names(df))) {
+      df$xc <- Y$xcol[pix$col]
+      df$yc <- Y$yrow[pix$row]
+    }
     df$values <- Y$v[cbind(pix$row, pix$col)]
-    df <- df[,c("xc", "yc", "x", "y", "seg", "tp", "values")]
-    names(df)[names(df) == "seg"] <- "mapXY"
+    df <- df[,c("xc", "yc", "x", "y", "mapXY", "tp", "values")]
   }
   if(is.mask(WL <- Window(L)) && !all(sapply(list(eps, dimyx, xy), is.null))) {
     Window(L, check=FALSE) <- as.mask(WL,
@@ -425,100 +438,45 @@ as.linim.linim <- function(X, ...) {
   return(Y)
 }
 
-# analogue of eval.im
-
-eval.linim <- function(expr, envir, harmonize=TRUE, warn=TRUE) {
-  sc <- sys.call()
-  # Get names of all variables in the expression
-  e <- as.expression(substitute(expr))
-  varnames <- all.vars(e)
-  allnames <- all.names(e, unique=TRUE)
-  funnames <- allnames[!(allnames %in% varnames)]
-  if(length(varnames) == 0)
-    stop("No variables in this expression")
-  # get the values of the variables
-  if(missing(envir)) {
-    envir <- parent.frame() # WAS: sys.parent()
-  } else if(is.list(envir)) {
-    envir <- list2env(envir, parent=parent.frame())
+as.linim.function <- function(X, L,
+                              ...,
+                              eps = NULL, dimyx = NULL, xy = NULL,
+                              rule.eps=c("adjust.eps",
+                                         "grow.frame", "shrink.frame"),
+                              delta=NULL, nd=NULL) {
+  if(is.linim(L) && !is.null(attr(L, "df"))) {
+    #' use L as template
+    Y <- L
+    L <- as.linnet(Y)
+  } else {
+    #' create template object
+    L <- as.linnet(L)
+    P <- as.ppp(runiflpp(1, L))
+    typical <- X(P$x, P$y, ...)
+    if(length(typical) != 1)
+      stop(paste("The function must return a single value",
+                 "when applied to a single point"))
+    rule.eps <- match.arg(rule.eps)
+    Y <- as.linim(typical, L, eps=eps, dimyx=dimyx, xy=xy,
+                  rule.eps=rule.eps,
+                  delta=delta, nd=nd)
   }
-  vars <- mget(varnames, envir=envir, inherits=TRUE, ifnotfound=list(NULL))
-  funs <- mget(funnames, envir=envir, inherits=TRUE, ifnotfound=list(NULL))
-  # Find out which variables are (linear) images
-  islinim <- unlist(lapply(vars, inherits, what="linim"))
-  if(!any(islinim))
-    stop("There are no linear images (class linim) in this expression")
-  # ....................................
-  # Evaluate the pixel values using eval.im
-  # ....................................
-  sc[[1L]] <- as.name('eval.im')
-  sc$envir <- envir
-  Y <- eval(sc)
-  # .........................................
-  # Then evaluate data frame entries if feasible
-  # .........................................
-  dfY <- NULL
-  linims <- vars[islinim]
-  nlinims <- length(linims)
-  dframes <- lapply(linims, attr, which="df")
-  nets <- lapply(linims, attr, which="L")
-  isim <- unlist(lapply(vars, is.im))
-  if(!any(isim & !islinim)) {
-    # all images are 'linim' objects
-    # Check that the images refer to the same linear network
-    if(nlinims > 1) {
-      agree <- unlist(lapply(nets[-1L], identical, y=nets[[1L]]))
-      if(!all(agree))
-        stop(paste("Images do not refer to the same linear network"))
-    }
-    dfempty <- unlist(lapply(dframes, is.null))
-    if(!any(dfempty)) {
-      # ensure data frames are compatible
-      if(length(dframes) > 1 && (
-          length(unique(nr <- sapply(dframes, nrow))) > 1   ||
-           !allElementsIdentical(dframes, "seg")            ||
-   	   !allElementsIdentical(dframes, "tp")
-	)) {
-        # find the one with finest spacing
-	imax <- which.max(nr)
-	# resample the others
-	dframes[-imax] <- lapply(dframes[-imax],
-	                         resampleNetworkDataFrame,
-	                         template=dframes[[imax]])
-      }
-      # replace each image variable by its data frame column of values
-      vars[islinim] <- lapply(dframes, getElement, "values")
-      # now evaluate expression
-      Yvalues <- eval(e, append(vars, funs))
-      # pack up
-      dfY <- dframes[[1L]]
-      dfY$values <- Yvalues
-    }
-  }
-  result <- linim(nets[[1L]], Y, df=dfY, restrict=FALSE)
-  return(result)
+  # extract coordinates of sample points along network in template
+  df <- attr(Y, "df")
+  coo <- df[, c("x", "y")]
+  # evaluate function at sample points
+  vals <- do.call(X, append(as.list(coo), list(...)))
+  # write values in data frame
+  df$values <- vals
+  attr(Y, "df") <- df
+  #' overwrite values in pixel array
+  Y$v[] <- NA
+  pix <- nearest.raster.point(df$xc, df$yc, Y)
+  Y$v[cbind(pix$row, pix$col)] <- vals
+  #'
+  return(Y)
 }
 
-resampleNetworkDataFrame <- function(df, template) {
-  # resample 'df' at the points of 'template'
-  invalues  <- df$values
-  insegment <- df$mapXY
-  inteepee  <- df$tp
-  out <- template
-  n <- nrow(out)
-  outvalues <- vector(mode = typeof(invalues), length=n)
-  outsegment <- out$mapXY
-  outteepee  <- out$tp
-  for(i in seq_len(n)) {
-    relevant <- which(insegment == outsegment[i])
-    if(length(relevant) > 0) {
-      j <- which.min(abs(inteepee[relevant] - outteepee[i]))
-      outvalues[i] <- invalues[relevant[j]]
-    }
-  }
-  out$values <- outvalues
-  return(out)
-}
 
 as.linnet.linim <- function(X, ...) {
   attr(X, "L")
@@ -607,16 +565,22 @@ as.linnet.linim <- function(X, ...) {
 
 integral.linim <- function(f, domain=NULL, weight=NULL, ...){
   verifyclass(f, "linim")
-  if(!is.null(weight))
+  if(!is.null(weight)) {
+    ## absorb weight into f
     weight <- as.linim(weight, domain(f))
-  if(is.tess(domain)) {
-    result <- sapply(tiles(domain), integral.linim, f = f)
-    if(length(dim(result)) > 1) result <- t(result)
-    return(result)
+    f <- weight * f
+    weight <- NULL
   }
   if(!is.null(domain)) {
-    f <- f[domain]
-    if(!is.null(weight)) weight <- weight[domain]
+    ## domain could be a spatial region or a tessellation
+    if(is.owin(domain) || is.im(domain) || is.numeric(domain)) {
+      ## restrict integrand to spatial region and continue
+      f <- f[domain, drop=FALSE]
+      domain <- NULL
+    } else if(!inherits(domain, c("tess", "lintess"))) {
+      stop(paste("Format of argument", sQuote("domain"), "not understood"),
+           call.=FALSE)
+    }
   }
   #' extract data
   L <- as.linnet(f)
@@ -624,10 +588,10 @@ integral.linim <- function(f, domain=NULL, weight=NULL, ...){
   df <- attr(f, "df")
   vals <- df$values
   seg <- factor(df$mapXY, levels=1:ns)
-  #' weight
-  if(!is.null(weight)) {
-    samplepoints <- ppp(df$xc, df$yc, window=Frame(L), check=FALSE)
-    vals <- vals * safelookup(weight, samplepoints)
+  if(!is.null(domain)) {
+    tp   <- df$tp
+    xx  <- df$x
+    yy  <- df$y
   }
   #' ensure each segment has at least one sample point
   nper <- table(seg)
@@ -636,34 +600,119 @@ integral.linim <- function(f, domain=NULL, weight=NULL, ...){
     mp <- midpoints.psp(as.psp(L)[missed])
     #' nearest pixel value
     valmid <- safelookup(f, mp)
-    if(!is.null(weight))
-      valmid <- valmid * safelookup(weight, mp)
-    #' concatenate factors
-    seg <- unlist(list(seg, factor(missed, levels=1:ns)))
+    #' concatenate data
     vals <- c(vals, valmid)
+    seg  <- unlist(list(seg, factor(missed, levels=1:ns)))
+    if(!is.null(domain)) {
+      tp   <-  c(tp, rep(0.5, sum(missed)))
+      coom <- coords(mp)
+      xx   <- c(xx, coom$x)
+      yy   <- c(yy, coom$y)
+    }
     #' update
     nper <- table(seg)
   }
-  #' take average of data on each segment
-  if(!is.complex(vals)) vals <- as.numeric(vals)
-  num <- tapplysum(vals, list(seg), na.rm=TRUE)
-  mu <- num/nper
-  #' weighted sum
-  len <- lengths_psp(as.psp(L))
-  if(anyNA(vals)) {
-    ##    p <- as.numeric(by(!is.na(vals), seg, mean, ..., na.rm=TRUE))
-    ##    p[is.na(p)] <- 0
-    defined <- as.numeric(!is.na(vals))
-    pnum <- tapplysum(defined, list(seg), na.rm=FALSE)
-    p <- pnum/nper
-    len <- len * p
+  
+  #' now handle tessellations
+  if(inherits(domain, "lintess")) {
+    ## tessellation on network
+    splitfac <- lineartileindex(as.integer(seg), tp, domain)
+  } else if(is.tess(domain)) {
+    ## tessellation of 2D space
+    splitfac <- tileindex(xx, yy, domain)
+  } else {
+    splitfac <- factor(rep(1, length(seg)))
   }
-  return(sum(mu * len))
+  splitlevels <- levels(splitfac)
+  nsplit <- length(splitlevels)
+
+  #' calculate integral
+  if(is.complex(vals)) {
+    result <- complex(nsplit)
+  } else {
+    vals <- as.numeric(vals)
+    result <- numeric(nsplit)
+  }
+  len <- lengths_psp(as.psp(L))
+
+  for(i in seq_len(nsplit)) {
+    vals.i <- if(nsplit == 1) vals else ( vals * (splitfac == splitlevels[i]) )
+    #' take average of data on each segment
+    num <- tapplysum(vals.i, list(seg), na.rm=TRUE)
+    mu <- num/nper
+    #' weighted sum
+    if(anyNA(vals.i)) {
+      defined <- as.numeric(!is.na(vals.i))
+      pnum <- tapplysum(defined, list(seg), na.rm=FALSE)
+      p <- pnum/nper
+      len <- len * p
+    }
+    result[i] <- sum(mu * len)
+  }
+  if(nsplit > 1)
+    names(result) <- splitlevels
+  return(result)
 }
 
 mean.linim <- function(x, ...) {
   trap.extra.arguments(...)
   integral(x)/sum(lengths_psp(as.psp(as.linnet(x))))
+}
+
+marginalIntegralOfLinim <- function(f, margin=c("x", "y")) {
+  verifyclass(f, "linim")
+  margin <- match.arg(margin)
+  Z <- as.im(f)
+  #' extract network data
+  L <- as.linnet(f)
+  ns <- nsegments(L)
+  df <- attr(f, "df")
+  vals <- df$values
+  tp   <- df$tp
+  xx  <- df$x
+  yy  <- df$y
+  seg <- factor(df$mapXY, levels=1:ns)
+  #' ensure each segment has at least one sample point
+  nper <- table(seg)
+  if(any(missed <- (nper == 0))) {
+    missed <- unname(which(missed))
+    mp <- midpoints.psp(as.psp(L)[missed])
+    #' nearest pixel value
+    valmid <- safelookup(f, mp)
+    #' concatenate data
+    vals <- c(vals, valmid)
+    seg  <- unlist(list(seg, factor(missed, levels=1:ns)))
+    tp   <-  c(tp, rep(0.5, sum(missed)))
+    coom <- coords(mp)
+    xx   <- c(xx, coom$x)
+    yy   <- c(yy, coom$y)
+    #' update
+    nper <- table(seg)
+  }
+  #' each sample point represents a length increment
+  len <- lengths_psp(as.psp(L))
+  sampleweight <- (len/nper)[as.integer(seg)]
+  #' determine sequence of x or y values and classify each sample point
+  switch(margin,
+         x = {
+           pixcoord <- Z$xcol
+           samplecoord <- xx
+         },
+         y = {
+           pixcoord <- Z$yrow
+           samplecoord <- yy
+         })
+  delta <- mean(diff(pixcoord))
+  bks <- c(pixcoord[1] - delta, pixcoord) + delta/2
+  sampleclass <- fastFindInterval(samplecoord, bks, left.open=FALSE)
+  sampleclass <- factor(sampleclass, levels=seq_len(length(pixcoord)))
+  #' calculate indefinite integral
+  z <- tapplysum(vals * sampleweight, list(sampleclass))
+  result <- data.frame(v          = pixcoord,
+                       cumulative = cumsum(z),
+                       marginal   = z/delta)
+  colnames(result)[1] <- margin
+  return(result)
 }
 
 quantile.linim <- function(x, probs = seq(0,1,0.25), ...) {

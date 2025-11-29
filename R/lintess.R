@@ -3,7 +3,7 @@
 #'
 #'   Tessellations on a Linear Network
 #'
-#'   $Revision: 1.57 $   $Date: 2025/09/08 05:51:48 $
+#'   $Revision: 1.64 $   $Date: 2025/11/27 03:13:31 $
 #'
 
 lintess <- function(L, df, marks=NULL) {
@@ -83,11 +83,29 @@ lintess <- function(L, df, marks=NULL) {
   return(out)
 }
 
+as.lintess <- function(X, ...) { UseMethod("as.lintess") }
+
+as.lintess.lintess <- function(X, ...) { X }
+
+as.lintess.linnet <- function(X, ...) {
+  ## each segment becomes a tile
+  ii <- seq_len(nsegments(X))
+  df <- data.frame(seg=ii, t0=0, t1=1, tile=factor(ii))
+  out <- list(L=X, df=df, marks=NULL)
+  class(out) <- c("lintess", class(out))
+  return(out)
+}
+
 print.lintess <- function(x, ...) {
   splat("Tessellation on a linear network")
   nt <- length(levels(x$df$tile))
   splat(nt, ngettext(nt, "tile", "tiles"))
-  if(anyNA(x$df$tile)) splat("[An additional tile is labelled NA]")
+  xdf <- x$df
+  if(anyNA(xdf$tile)) {
+    splat("[An additional tile is labelled NA]")
+  } else if(all(xdf$t0 == 0) && all(xdf$t1 == 1) && !anyDuplicated(xdf$tile)) {
+    splat("The tiles are the segments of the network")
+  }
   if(!is.null(marx <- x$marks)) {
     mvt <- markvaluetype(marx)
     if(length(mvt) == 1) {
@@ -390,6 +408,8 @@ lineartileindex <- function(seg, tp, Z,
   return(answer)
 }
 
+as.function.lintess <- function(x, ...) { as.linfun.lintess(x, ...) }
+
 as.linfun.lintess <- local({
 
   as.linfun.lintess <- function(X, ..., values=marks(X), navalue=NA) {
@@ -547,4 +567,42 @@ identify.lintess <- function(x, ..., labels=tilenames(x),
          {})
   return(out)
 }
+
+## geometrical operations -- none of these affect the data frame
+
+affine.lintess <- function(X, ...) {
+  X$L <- affine(X$L, ...)
+  return(X)
+}
+
+flipxy.lintess <- function(X, ...) {
+  X$L <- flipxy(X$L, ...)
+  return(X)
+}
+
+rotate.lintess <- function(X, ...) {
+  X$L <- rotate(X$L, ...)
+  return(X)
+}
+
+shift.lintess <- function(X, ...) {
+  X$L <- Lnew <- shift(X$L, ...)
+  attr(X, "lastshift") <- getlastshift(Lnew)
+  return(X)
+}
+
+rescale.lintess <- function(X, s, unitname) {
+  if(missing(s)) s <- 1
+  if(missing(unitname)) unitname <- NULL
+  X$L <- rescale(X$L, s=s, unitname=unitname)
+  return(X)
+}
+
+scalardilate.lintess <- function(X, f, ...) {
+  if(missing(f)) return(X)
+  X$L <- scalardilate(X$L, f=f, ...)
+  return(X)
+}
+
+
 

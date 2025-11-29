@@ -3,7 +3,7 @@
 #
 #  Point process models on a linear network
 #
-#  $Revision: 1.57 $   $Date: 2024/01/25 10:21:02 $
+#  $Revision: 1.67 $   $Date: 2025/11/24 08:23:09 $
 #
 
 lppm <- function(X, ...) {
@@ -19,7 +19,8 @@ lppm.formula <- function(X, interaction=NULL, ..., data=NULL) {
   ########### INTERPRET FORMULA ##############################
   
   if(!inherits(X, "formula"))
-    stop(paste("Argument 'X' should be a formula"))
+    stop(paste("Argument 'X' should be a formula"),
+         call.=FALSE)
   formula <- X
   
   if(spatstat.options("expand.polynom"))
@@ -27,7 +28,8 @@ lppm.formula <- function(X, interaction=NULL, ..., data=NULL) {
 
   ## check formula has LHS and RHS. Extract them
   if(length(formula) < 3)
-    stop(paste("Formula must have a left hand side"))
+    stop(paste("Formula must have a left hand side"),
+         call.=FALSE)
   Yexpr <- formula[[2L]]
   trend <- formula[c(1L,3L)]
   
@@ -61,7 +63,8 @@ lppm.lpp <- function(X, ..., eps=NULL, nd=1000, random=FALSE) {
   if(any(clash <- resv %in% nama))
     warning(paste(ngettext(sum(clash), "Argument", "Arguments"),
                   commasep(sQuote(resv[clash])),
-                  "must not be used"))
+                  "must not be used"),
+            call.=FALSE)
   stopifnot(inherits(X, "lpp"))
   quadarg <- substitute(linequad(X, eps=eps, nd=nd, random=random),
                         list(X=substitute(X),
@@ -72,7 +75,8 @@ lppm.lpp <- function(X, ..., eps=NULL, nd=1000, random=FALSE) {
                  list(quadarg, ..., method="mpl", forcefit=TRUE),
                  envir=parent.frame())
   if(!is.poisson.ppm(fit))
-    warning("Non-Poisson models currently use Euclidean distance")
+    warning("Non-Poisson models currently use Euclidean distance",
+            call.=FALSE)
   out <- list(X=X, fit=fit, Xname=Xname, call=cl, callstring=callstring)
   class(out) <- "lppm"
   return(out)
@@ -109,8 +113,16 @@ predict.lppm <- local({
                            type="trend", locations=NULL, covariates=NULL,
                            se=FALSE,
                            new.coef=NULL) {
+
     type <- pickoption("type", type,
-                       c(trend="trend", cif="cif", lambda="cif"))
+                       c(trend="trend", cif="cif", lambda="cif",
+                         intensity="intensity"))
+
+    if(type == "intensity" && !is.poisson(object)) 
+      stop(paste("Intensity calculation is not yet implemented",
+                 "for non-Poisson models on a network"),
+           call.=FALSE)
+      
     X <- object$X
     fit <- object$fit
     L <- as.linnet(X)
@@ -251,7 +263,7 @@ plot.lppm <- function(x, ..., type="trend") {
 anova.lppm <- function(object, ..., test=NULL) {
   stuff <- list(object=object, ...)
   if(!is.na(hit <- match("override", names(stuff)))) {
-    warning("Argument 'override' is outdated and was ignored")
+    warning("Argument 'override' is outdated and was ignored", call.=FALSE)
     stuff <- stuff[-hit]
   }
   #' extract ppm objects where appropriate
@@ -273,7 +285,8 @@ update.lppm <- function(object, ...) {
     # trap point pattern argument & convert to quadscheme
     ii <- which(islpp)
     if((npp <- length(ii)) > 1)
-      stop(paste("Arguments not understood:", npp, "lpp objects given"))
+      stop(paste("Arguments not understood:", npp, "lpp objects given"),
+           call.=FALSE)
     X <- aargh[[ii]]
     aargh[[ii]] <- linequad(X)
     Xexpr <- sys.call()[[ii+2L]] %orifnull% expression(X)
@@ -284,7 +297,8 @@ update.lppm <- function(object, ...) {
     # trap formula pattern argument, update it, evaluate LHS if required
     jj <- which(isfmla)
     if((nf <- length(jj)) > 1)
-      stop(paste("Arguments not understood:", nf, "formulae given"))
+      stop(paste("Arguments not understood:", nf, "formulae given"),
+           call.=FALSE)
     fmla <- aargh[[jj]]
     fmla <- update(formula(object), fmla)
     if(!is.null(lhs <- lhs.of.formula(fmla))) {
@@ -299,14 +313,15 @@ update.lppm <- function(object, ...) {
                     append(list(fit), aargh),
                     envir=callframe)
   if(!is.poisson.ppm(newfit))
-    warning("Non-Poisson models currently use Euclidean distance")
+    warning("Non-Poisson models currently use Euclidean distance",
+            call.=FALSE)
   out <- list(X=X, fit=newfit, Xname=Xname)
   class(out) <- "lppm"
   return(out)
 }
 
 updateData.lppm <- function(model, X, ...) {
-  update(model, Q=X)
+  update(model, X)
 }
 
 terms.lppm <- function(x, ...) {
@@ -428,7 +443,7 @@ is.marked.lppm <- function(X, ...) { is.marked(X$fit) }
 
 vcov.lppm <- function(object, ...) {
   if(!is.poisson(object))
-    stop("vcov.lppm is only implemented for Poisson models")
+    stop("vcov.lppm is only implemented for Poisson models", call.=FALSE)
   vcov(object$fit, ...)
 }
 
@@ -442,3 +457,84 @@ emend.lppm <- function(object, ...) {
 }
 
 response.lppm <- function(object) { data.lppm(object) }
+
+lurking.lppm <- function(object, covariate, type="raw", ..., covname) {
+  stopifnot(is.lppm(object))
+  if(missing(covname)) {
+    cl <- match.call()
+    co <- cl$covariate
+    covname <- if(is.name(co)) as.character(co) else
+               if(is.expression(co)) format(co[[1]]) else "covariate"
+  }
+  lurking.ppm(as.ppm(object), covariate, type=type, ..., covname=covname)
+}
+
+lurking.lpp <- function(object, covariate, type="raw", ..., covname) {
+  stopifnot(is.lpp(object))
+  if(missing(covname)) {
+    cl <- match.call()
+    co <- cl$covariate
+    covname <- if(is.name(co)) as.character(co) else
+               if(is.expression(co)) format(co[[1]]) else "covariate"
+  }
+  model <- lppm(object ~ 1, forcefit=TRUE)
+  lurking.ppm(as.ppm(model), covariate, type=type, ..., covname=covname)
+}
+
+parres.lppm <- function(model, covariate, ...,
+                        smooth.effect=FALSE, subregion=NULL,
+                        bw="nrd0", adjust=1, from=NULL,to=NULL, n=512,
+                        bw.input = c("points", "quad"),
+                        bw.restrict = FALSE,
+                        covname) {  
+  callstring <- paste(deparse(sys.call()), collapse = "")
+  modelname <- short.deparse(substitute(model))
+
+  stopifnot(is.lppm(model))
+
+  if(is.marked(model))
+    stop("Sorry, this is not yet implemented for marked models")
+  
+  if(missing(covariate)) {
+    mc <- model.covariates(model)
+    if(length(mc) == 1) covariate <- mc else stop("covariate must be provided")
+  }
+  if(missing(covname)) 
+    covname <- sensiblevarname(deparse(substitute(covariate)), "X")
+
+  if(is.null(adjust)) adjust <- 1
+
+  bw.input <- match.arg(bw.input)
+  
+  partialResidualEngine(model         = as.ppm(model),
+                        covariate     = covariate,
+                        ...,
+                        smooth.effect = smooth.effect,
+                        subregion     = subregion,
+                        bw            = bw,
+                        adjust        = adjust,
+                        from          = from,
+                        to            = to,
+                        n             = n,
+                        bw.input      = bw.input,
+                        bw.restrict   = bw.restrict,
+                        covname       = covname,
+                        callstring    = callstring,
+                        modelname     = modelname,
+                        do.variance   = is.poisson(model))
+}
+
+eem.lppm <- function(fit, ...) {
+  verifyclass(fit, "lppm")
+  lambda <- fitted(fit, dataonly=TRUE, ...)
+  eemarks <- 1/lambda
+  attr(eemarks, "type") <- "eem"
+  attr(eemarks, "typename") <- "exponential energy marks"
+  return(eemarks)
+}
+
+residuals.lppm <- function(object, type="raw", ...) {
+  res <- residuals(as.ppm(object), type=type, ...)
+  attr(res, "plekken") <- attr(quad.ppm(object), "plekken")
+  return(res)
+}

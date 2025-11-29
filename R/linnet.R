@@ -3,7 +3,7 @@
 #    
 #    Linear networks
 #
-#    $Revision: 1.92 $    $Date: 2025/05/29 04:33:30 $
+#    $Revision: 1.97 $    $Date: 2025/11/23 06:47:21 $
 #
 # An object of class 'linnet' defines a linear network.
 # It includes the following components
@@ -362,36 +362,52 @@ as.linnet.linnet <- function(X, ..., sparse, maxsize=30000) {
   return(X)
 }
 
-as.linnet.psp <- function(X, ..., eps, sparse=FALSE) {
-  X <- selfcut.psp(X)
-  camefrom <- attr(X, "camefrom")
-  V <- unique(endpoints.psp(X))
-  if(missing(eps) || is.null(eps)) {
-    eps <- sqrt(.Machine$double.eps) * diameter(Frame(X))
+as.linnet.psp <- function(X, ..., eps, sparse=FALSE, chop=TRUE, fuse=TRUE) {
+  if(chop) {
+    X <- selfcut.psp(X)
+    camefrom <- attr(X, "camefrom")
   } else {
-    check.1.real(eps)
-    stopifnot(eps >= 0)
+    camefrom <- seq_len(nsegments(X))
   }
-  if(eps > 0 && minnndist(V) <= eps) {
-    gV <- marks(connected(V, eps))
-    xx <- as.numeric(by(V$x, gV, mean))
-    yy <- as.numeric(by(V$y, gV, mean))
-    V <- ppp(xx, yy, window=Window(X))
-  }
-  first  <- endpoints.psp(X, "first")
-  second <- endpoints.psp(X, "second")
-  from <- nncross(first, V, what="which")
-  to   <- nncross(second, V, what="which")
-  if(any(reverse <- (from > to))) {
-    newfrom <- ifelse(reverse, to, from)
-    newto   <- ifelse(reverse, from, to)
-    from <- newfrom
-    to   <- newto
-  }
-  fromto <- cbind(from, to)
-  nontrivial <- (from != to) & !duplicated(fromto)
-  join <- fromto[nontrivial, , drop=FALSE]
-  result <- linnet(V, edges=join, sparse=sparse)
+  V <- endpoints.psp(X)
+  if(!fuse) {
+    ## simply join the endpoints
+    nX <- nsegments(X)
+    seqX <- seq_len(nX)
+    from <- seqX
+    to   <- nX + seqX
+    join <- cbind(from, to)
+    nontrivial <- rep(TRUE, nX)
+  } else {
+    ## fuse close vertices
+    V <- unique(V)
+    if(missing(eps) || is.null(eps)) {
+      eps <- sqrt(.Machine$double.eps) * diameter(Frame(X))
+    } else {
+      check.1.real(eps)
+      stopifnot(eps >= 0)
+    }
+    if(eps > 0 && minnndist(V) <= eps) {
+      gV <- marks(connected(V, eps))
+      xx <- as.numeric(by(V$x, gV, mean))
+      yy <- as.numeric(by(V$y, gV, mean))
+      V <- ppp(xx, yy, window=Window(X))
+    }
+    first  <- endpoints.psp(X, "first")
+    second <- endpoints.psp(X, "second")
+    from <- nncross(first, V, what="which")
+    to   <- nncross(second, V, what="which")
+    if(any(reverse <- (from > to))) {
+      newfrom <- ifelse(reverse, to, from)
+      newto   <- ifelse(reverse, from, to)
+      from <- newfrom
+      to   <- newto
+    }
+    fromto <- cbind(from, to)
+    nontrivial <- (from != to) & !duplicated(fromto)
+    join <- fromto[nontrivial, , drop=FALSE]
+  } 
+  result <- linnet(V, edges=join, sparse=sparse, warn=FALSE)
   if(is.marked(X)) marks(result$lines) <- marks(X[nontrivial])
   attr(result, "camefrom") <- camefrom[nontrivial]
   return(result)
@@ -584,6 +600,15 @@ rescale.linnet <- function(X, s, unitname) {
   if(missing(s) || is.null(s)) s <- 1/unitname(X)$multiplier
   Y <- scalardilate(X, f=1/s)
   unitname(Y) <- rescale(unitname(X), s, unitname)
+  return(Y)
+}
+
+flipxy.linnet <- function(X) {
+  verifyclass(X, "linnet")
+  Y <- X
+  Y$window   <- flipxy(X$window)
+  Y$vertices <- flipxy(X$vertices)
+  Y$lines    <- flipxy(X$lines)
   return(Y)
 }
 

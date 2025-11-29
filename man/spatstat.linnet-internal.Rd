@@ -9,28 +9,49 @@
 \alias{DoCountEnds}
 \alias{FDMKERNEL}
 \alias{as.linfun.linfun}
+\alias{as.lintess}
+\alias{as.lintess.lintess}
+\alias{as.lintess.linnet}
+\alias{as.lintess.linearquadratcount}
+\alias{affine.lintess}
 \alias{as.owin.lintess}
+\alias{as.owin.linearquadratcount}
+\alias{Window.linearquadratcount}
+\alias{diagLppmEngine}
+\alias{domain.linearquadratcount}
 \alias{default.linnet.tolerance}
 \alias{evaluateNetCovariate}
 \alias{evaluateNetCovariateAlongNetwork}
 \alias{evaluateNetCovariateAtPoints}
 \alias{exactlppm}
+\alias{flipxy.lintess}
 \alias{getglmdata.lppm}
 \alias{getglmfit.lppm}
 \alias{getglmsubset.lppm}
 \alias{hasglmfit.lppm}
+\alias{intensity.linearquadratcount}
 \alias{is.poisson.exactlppm}
 \alias{is.stationary.exactlppm}
 \alias{makeLinnetTolerance}
+\alias{marginalIntegralOfLinim}
+\alias{plot.linearquadratcount}
+\alias{plot.qqlppm}
 \alias{predict.exactlppm}
+\alias{print.diaglppm}
 \alias{print.exactlppm}
 \alias{print.lintess}
+\alias{print.qqlppm}
 \alias{print.summary.linim}
 \alias{print.summary.linnet}
 \alias{print.summary.lintess}
+\alias{rescale.lintess}
 \alias{resolve.heat.steps}
 \alias{response.exactlppm}
 \alias{rmaxEuclidean}
+\alias{rotate.lintess}
+\alias{scalardilate.lintess}
+\alias{shift.lintess}
+\alias{shift.linearquadratcount}
 \alias{summary.lintess}
 \alias{nobjects.lintess}
 \alias{Window.lintess}
@@ -89,7 +110,20 @@ DoCountCrossEnds(X, I, J, DIJ, toler)
 FDMKERNEL(lppobj, dtt, dtx, M, nsave, weights,
           stepnames, setuponly, verbose)
 \method{as.linfun}{linfun}(X, \dots)
+as.lintess(X, \dots)
+\method{as.lintess}{lintess}(X, \dots)
+\method{as.lintess}{linnet}(X, \dots)
+\method{as.lintess}{linearquadratcount}(X, \dots)
+\method{affine}{lintess}(X, \dots)
 \method{as.owin}{lintess}(W, \dots)
+\method{as.owin}{linearquadratcount}(W, \dots, fatal)
+\method{Window}{linearquadratcount}(X, \dots)
+diagLppmEngine(object, \dots, type, typename, opt,
+               sigma, compute.sd, compute.cts,
+               envelope, nsim, nrank,
+               rv, oldstyle, splineargs, verbose)
+\method{domain}{linearquadratcount}(X, \dots)
+\method{flipxy}{lintess}(X, \dots)
 \method{getglmdata}{lppm}(object, \dots)
 \method{getglmfit}{lppm}(object, \dots)
 \method{getglmsubset}{lppm}(object, \dots)
@@ -99,17 +133,28 @@ evaluateNetCovariate(covariate, locations, \dots)
 evaluateNetCovariateAlongNetwork(covariate, locations, \dots, types)
 evaluateNetCovariateAtPoints(covariate, locations, \dots, allow.column)
 exactlppm(X, baseline, \dots, subset)
+\method{intensity}{linearquadratcount}(X, \dots, fun)
 \method{is.poisson}{exactlppm}(x)
 \method{is.stationary}{exactlppm}(x)
 makeLinnetTolerance(toler)
+marginalIntegralOfLinim(f, margin)
+\method{plot}{linearquadratcount}(x, \dots, main, add, do.plot, textargs)
+\method{plot}{qqlppm}(x, \dots, limits, monochrome, limcol)
 \method{predict}{exactlppm}(object, locations,\dots)
+\method{print}{diaglppm}(x, \dots)
 \method{print}{exactlppm}(x, \dots)
 \method{print}{lintess}(x, \dots)
+\method{print}{qqlppm}(x, \dots)
 \method{print}{summary.linim}(x, \dots)
 \method{print}{summary.linnet}(x, \dots)
 \method{print}{summary.lintess}(x, \dots)
-\method{summary}{lintess}(object, \dots)
+\method{rescale}{lintess}(X, s, unitname)
 \method{response}{exactlppm}(object)
+\method{rotate}{lintess}(X, \dots)
+\method{shift}{lintess}(X, \dots)
+\method{shift}{linearquadratcount}(X, \dots)
+\method{scalardilate}{lintess}(X, f,\dots)
+\method{summary}{lintess}(object, \dots)
 \method{nobjects}{lintess}(x)
 \method{Window}{lintess}(X, \dots)
 \method{Window}{linnet}(X, \dots, check=TRUE) <- value
@@ -123,7 +168,7 @@ flatdensityatpointslpp(X, \dots, leaveoneout, disconnect, weights, what)
 local2lpp(L, seg, tp, X, df.only)
 looHeatLPP(U0, Amatrix, npts, niter, nsave,
            lixelweight, lixelmap, verbose) 
-looVoronoiLPP(X)
+looVoronoiLPP(X, metric)
 validate.lpp.coords(X, fatal, context)
 \method{as.ppm}{lppm}(object)
 pointsAlongNetwork(L, delta)
@@ -181,7 +226,7 @@ qkdeEngine(x, sigma, \dots, at, what,
 %NAMESPACE S3method("Summary", "linimlist")
 LinimOp(e1, e2, op)
 LinimListOp(e1, e2, op)
-traceTessLinnet(A, L)
+traceTessLinnet(A, L, epsfrac)
 
 }
 \details{

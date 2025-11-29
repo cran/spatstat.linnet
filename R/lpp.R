@@ -1,7 +1,7 @@
 #
 # lpp.R
 #
-#  $Revision: 1.85 $   $Date: 2024/06/16 02:02:52 $
+#  $Revision: 1.89 $   $Date: 2025/11/16 05:44:56 $
 #
 # Class "lpp" of point patterns on linear networks
 
@@ -63,7 +63,7 @@ lpp <- function(X, L, ...) {
     ctype <- c(rep("s", 2), rep("l", 2), rep("m", nmark))
   }
   out <- ppx(data=df, domain=L, coord.type=ctype)
-  class(out) <- c("lpp", class(out))
+  class(out) <- unique(c("lpp", class(out)))
   return(out)
 }
 
@@ -445,7 +445,7 @@ local2lpp <- function(L, seg, tp, X=NULL, df.only=FALSE) {
   if(df.only) return(data)
   ctype <- c("s", "s", "l", "l")
   out <- ppx(data=data, domain=L, coord.type=ctype)
-  class(out) <- c("lpp", class(out))
+  class(out) <- unique(c("lpp", class(out)))
   return(out)
 }
 
@@ -465,7 +465,7 @@ local2lpp <- function(L, seg, tp, X=NULL, df.only=FALSE) {
       xi <- ppx(data=daij, domain=x$domain, coord.type=as.character(x$ctype))
       if(drop)
         xi <- xi[drop=TRUE] # call [.ppx to remove unused factor levels
-      class(xi) <- c("lpp", class(xi))
+      class(xi) <- unique(c("lpp", class(xi)))
     }
     x <- xi
   } 
@@ -521,6 +521,14 @@ affine.lpp <- function(X,  mat=diag(c(1,1)), vec=c(0,0), ...) {
   Y <- X
   Y$data[, c("x","y")] <- affinexy(X$data[, c("x","y")], mat=mat, vec=vec)
   Y$domain <- affine(X$domain, mat=mat, vec=vec, ...)
+  return(Y)
+}
+
+flipxy.lpp <- function(X) {
+  verifyclass(X, "lpp")
+  Y <- X
+  Y$domain <- flipxy(X$domain)
+  Y$data[, c("x","y")] <- flipxy(X$data[, c("y","x")])
   return(Y)
 }
 
@@ -710,3 +718,4 @@ text.lpp <- function(x, ...) {
   co <- coords(x)
   graphics::text.default(x=co$x, y=co$y, ...)
 }
+

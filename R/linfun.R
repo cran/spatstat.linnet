@@ -3,7 +3,7 @@
 #
 #   Class of functions of location on a linear network
 #
-#   $Revision: 1.18 $   $Date: 2023/05/02 08:02:49 $
+#   $Revision: 1.23 $   $Date: 2025/11/28 05:33:09 $
 #
 
 linfun <- function(f, L) {
@@ -58,18 +58,22 @@ as.linim.linfun <- function(X, L=domain(X),
                             rule.eps=c("adjust.eps",
                                         "grow.frame", "shrink.frame"),
                             delta=NULL, nd=NULL) {
-  if(is.null(L))
-    L <- domain(X)
-  #' create template
-  typical <- X(runiflpp(1, L), ...)
-  if(length(typical) != 1)
-    stop(paste("The function must return a single value",
-               "when applied to a single point"))
-  rule.eps <- match.arg(rule.eps)
-  Y <- as.linim(typical, L, eps=eps, dimyx=dimyx, xy=xy,
-                rule.eps=rule.eps,
-                delta=delta, nd=nd)
-  # extract coordinates of sample points along network
+  if(is.linim(L) && !is.null(attr(L, "df"))) {
+    #' use L as template object
+    Y <- L
+    L <- as.linnet(Y)
+  } else {
+    #' create template object
+    typical <- X(runiflpp(1, L), ...)
+    if(length(typical) != 1)
+      stop(paste("The function must return a single value",
+                 "when applied to a single point"))
+    rule.eps <- match.arg(rule.eps)
+    Y <- as.linim(typical, L, eps=eps, dimyx=dimyx, xy=xy,
+                  rule.eps=rule.eps,
+                  delta=delta, nd=nd)
+  }
+  # extract coordinates of sample points along network in template 
   df <- attr(Y, "df")
   coo <- df[, c("x", "y", "mapXY", "tp")]
   colnames(coo)[3L] <- "seg"
@@ -89,6 +93,8 @@ as.linim.linfun <- function(X, L=domain(X),
 as.data.frame.linfun <- function(x, ...) {
   as.data.frame(as.linim(x, ...))
 }
+
+as.function.linim <- function(x, ...) { as.linfun.linim(x, ...) }
 
 as.linfun.linim <- function(X, ...) {
   trap.extra.arguments(..., .Context="as.linfun.linim")
@@ -159,3 +165,7 @@ as.linfun.linnet <- function(X, ..., values=marks(X)) {
   g <- linfun(f, unmark(X))
   return(g)
 }
+
+as.function.linfun <- function(x, ...) { return(x) }
+
+as.function.linnet <- function(x, ...) { as.linfun.linnet(x, ...) }

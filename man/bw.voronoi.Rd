@@ -11,7 +11,9 @@
 }
 \usage{
 bw.voronoi(X, \dots, probrange = c(0.2, 0.8), nprob = 10,
-           prob = NULL, nrep = 100, verbose = TRUE, warn=TRUE)
+           prob = NULL, nrep = 100,
+           metric=c("shortestpath", "Euclidean"),
+           verbose = TRUE, warn=TRUE)
 }
 \arguments{
   \item{X}{
@@ -35,6 +37,11 @@ bw.voronoi(X, \dots, probrange = c(0.2, 0.8), nprob = 10,
   }
   \item{nrep}{
     Number of simulated realisations to be used for the computation.
+  }
+  \item{metric}{
+    Character string (partially matched) specifying the distance
+    metric used to define the Dirichlet tessellation.
+    Argument passed to \code{\link{lineardirichlet}}.
   }
   \item{verbose}{
     Logical value indicating whether to print progress reports.
@@ -71,11 +78,20 @@ bw.voronoi(X, \dots, probrange = c(0.2, 0.8), nprob = 10,
   \code{\link{densityVoronoi.lpp}}, \code{\link[spatstat.explore]{bw.optim.object}}
 }
 \examples{
-   np <- if(interactive()) 10 else 3
-   nr <- if(interactive()) 100 else 2
-   b <- bw.voronoi(spiders, nprob=np, nrep=nr)
+   if(interactive()) {
+     X <- spiders
+     np <- 10
+     nr <- 100
+   } else {
+     X <- runiflpp(4, simplenet)
+     np <- 3
+     nr <- 2
+   }
+   b <- bw.voronoi(X, nprob=np, nrep=nr)
    b
    plot(b)
+   bE <- bw.voronoi(X, nprob=np, nrep=nr, metric="E")
+   bE
 }
 \keyword{spatial}
 \keyword{methods}

@@ -1,4 +1,95 @@
 
+        CHANGES IN spatstat.linnet VERSION 3.4-0
+
+OVERVIEW
+
+    o Diagnostics for a fitted point process model on a linear network.
+
+    o Quadrat counting and quadrat tests on a linear network.
+
+    o More geometrical operations on linear network objects.
+
+    o Pixelwise arithmetic on a linear network.
+    
+    o Internal improvements.
+
+NEW FUNCTIONS
+
+    o as.lintess
+    Convert other kinds of data to a tessellation on a network.
+
+    o diagnose.lppm
+    Diagnostic plots for point process model on a linear network.
+    
+    o eem.lppm
+    Stoyan-Grabarnik exponential energy weights diagnostic.
+
+    o harmonise.linim
+    Convert several images on a network to a common pixel grid.
+
+    o linim.apply
+    Apply a function pixelwise to a list of images on a network.
+    
+    o lurking.lpp
+    Lurking variable plot for point pattern on a linear network.
+
+    o lurking.lppm
+    Lurking variable plot for point process model on a linear network.
+
+    o flipxy.linnet
+    Swap x and y coordinates of a linear network
+
+    o flipxy.lpp
+    Swap x and y coordinates of a point pattern on a linear network
+
+    o parres.lppm
+    Partial residual plot for point process model on a linear network.
+
+    o qqplot.lppm
+    Residual Q-Q plot for  point process model on a linear network.
+    
+    o quadratcount.lpp
+    Method for quadrat counting on a linear network.
+
+    o quadrat.test.lpp, quadrat.test.lppm
+    Methods for quadrat test on a linear network.
+
+    o residuals.lppm
+    Residual measure for a point process model on a linear network.
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o as.linnet.psp
+    New arguments 'chop' and 'fuse'.
+
+    o bw.voronoi
+    New argument 'metric' passed to 'densityVoronoi.lpp'.
+
+    o densityVoronoi.lpp
+    New argument 'metric' passed to 'lineardirichlet'.
+
+    o integral.linim, integral.linfun
+    Argument 'domain' can be a tessellation on a network (class 'lintess').
+
+    o intersect.lintess
+    Improved behaviour when X or Y is a 2D tessellation.
+
+    o lineardirichlet
+    New argument 'metric' allows the tessellation to be constructed
+    using either the shortest-path distance or Euclidean distance.
+    
+    o linequad
+    Argument 'Y' can be a linear network.
+    
+    o print.lintess
+    Output improved.
+
+BUG FIXES
+
+    o intersect.lintess
+    Result was incorrect if X was a tessellation and Y was a linear network.
+    Fixed.
+
         CHANGES IN spatstat.linnet VERSION 3.3-2
 
 OVERVIEW
