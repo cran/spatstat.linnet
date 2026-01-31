@@ -1,7 +1,7 @@
 #
 # lpp.R
 #
-#  $Revision: 1.89 $   $Date: 2025/11/16 05:44:56 $
+#  $Revision: 1.90 $   $Date: 2026/01/21 06:26:39 $
 #
 # Class "lpp" of point patterns on linear networks
 
@@ -685,8 +685,7 @@ connected.lpp <- function(X, R=Inf, ..., dismantle=TRUE) {
     close <- (pairdist(X) <= R)
     diag(close) <- FALSE
     ij <- which(close, arr.ind=TRUE)
-    lab0 <- cocoEngine(nv, ij[,1] - 1L, ij[,2] - 1L, "connected.lpp")
-    lab <- lab0 + 1L
+    lab <- cocoLabels(nv, ij[,1], ij[,2], "connected.lpp")
     # Renumber labels sequentially 
     lab <- as.integer(factor(lab))
     # Convert labels to factor

@@ -30,6 +30,62 @@ if(FULLTEST) {
   })
 }
 
+#'
+#'   spatstat.linnet/tests/sidefx.R
+#'
+#' Test whether plot(do.plot=FALSE) has no side effects on graphics system
+#'
+#'  $Revision: 1.6 $  $Date: 2025/12/23 00:24:24 $
+
+local({
+  if(FULLTEST) {
+    ## test whether a graphics device has been started
+    deviceExists <- function() { length(dev.list()) != 0 }
+    ## check whether executing 'expr' causes creation of a graphics device
+    chk <- function(expr) {
+      ename <- sQuote(deparse(substitute(expr)))
+      if(deviceExists()) {
+        ## try switching off the graphics
+        graphics.off()
+        if(deviceExists()) {
+          ## Dang
+          warning(paste("Cannot check", ename, 
+                        "as a graphics device already exists"),
+                  call.=FALSE)
+          return(FALSE)
+        }
+      }
+      eval(expr)
+      if(deviceExists()) {
+        stop(paste("Evaluating", ename, 
+                   "caused a graphics device to be started"),
+             call.=FALSE)
+      }
+      return(TRUE)
+    }
+    
+
+
+
+
+    ## linnet
+    chk(plot(simplenet, do.plot=FALSE))
+    ## lpp
+    chk(plot(spiders, do.plot=FALSE))
+    chk(plot(chicago, do.plot=FALSE))
+    ## lintess
+    chk(plot(as.lintess(simplenet), do.plot=FALSE))
+    ## linfun, linim
+    f <- function(x,y,seg,tp) { x - y }
+    aLinfun <- Y <- linfun(f, simplenet)
+    aLinim  <- Z <- as.linim(Y)
+    chk(plot(aLinfun, do.plot=FALSE))    
+    chk(plot(aLinim, do.plot=FALSE))
+    ## linearquadratcount
+    chk(plot(quadratcount(spiders, nx=3), do.plot=FALSE))
+
+  }
+})
 #
 #  tests/undoc.R
 #
@@ -50,7 +106,7 @@ if(FULLTEST) {
 ##
 ##  Check validity of update.ppm
 ##
-##  $Revision: 1.8 $ $Date: 2022/10/23 01:19:19 $
+##  $Revision: 1.9 $ $Date: 2025/12/19 00:37:21 $
 
 local({
   

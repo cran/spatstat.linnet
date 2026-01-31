@@ -1,4 +1,68 @@
 
+        CHANGES IN spatstat.linnet VERSION 3.4-1
+
+OVERVIEW
+
+    o Improved algorithm for integrating a function on a network.
+
+    o Improvements to perspective plot of a function on a network.
+
+    o Identify threads in a network.
+
+    o lppm recognises the local coordinates 'seg' and 'tp'.
+    
+    o Minor improvements and bug fixes.
+
+NEW FUNCTIONS
+
+    o threads
+    Identify threads in a network.
+    
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o density.lpp
+    Improved message output when verbose=TRUE.
+    
+    o integral.linfun
+    New argument 'exact'. If 'exact=TRUE', a more accurate algorithm is used.
+
+    o lppm
+    The model formula may involve the local coordinates 'seg' and 'tp'
+    ('seg' is segment number, 'tp' is relative position along the segment)
+
+    o lurking.lppm, lurking.lpp
+    Argument 'covariate' can be a function(x,y)
+    or one of the strings "x", "y" or "tp".
+
+    o persp.linim
+    Improved behaviour close to vertices of the network.
+    New argument 'extrapolate'.
+
+    o persp.linim
+    Argument 'col.base' can be a pixel image, allowing a colour image
+    to be plotted on the horizontal plane at height zero.
+
+    o persp.linim
+    New argument 'zadjust' to adjust the vertical scale.
+
+BUG FIXES
+
+    o as.linnet.psp
+    Crashed sometimes if the window of X was not convex.
+    Fixed.
+    
+    o lurking.lppm
+    Crashed if envelope=TRUE.
+    Fixed.
+
+    o plot.linnet
+    Disobeyed 'do.plot=FALSE'.
+    Fixed.
+
+    o shortestpath
+    This function was defined, but was not exported from spatstat.linnet.
+    Fixed.
+
         CHANGES IN spatstat.linnet VERSION 3.4-0
 
 OVERVIEW

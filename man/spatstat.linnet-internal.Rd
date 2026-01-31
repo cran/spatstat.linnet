@@ -32,6 +32,7 @@
 \alias{intensity.linearquadratcount}
 \alias{is.poisson.exactlppm}
 \alias{is.stationary.exactlppm}
+\alias{levelset.linfun}
 \alias{makeLinnetTolerance}
 \alias{marginalIntegralOfLinim}
 \alias{plot.linearquadratcount}
@@ -92,6 +93,7 @@
 \alias{LinimOp}
 \alias{LinimListOp}
 \alias{traceTessLinnet}
+\alias{mapLinnetToLine}
 
 
 %%%%%%%
@@ -136,6 +138,7 @@ exactlppm(X, baseline, \dots, subset)
 \method{intensity}{linearquadratcount}(X, \dots, fun)
 \method{is.poisson}{exactlppm}(x)
 \method{is.stationary}{exactlppm}(x)
+\method{levelset}{linfun}(X, thresh, compare, \dots)
 makeLinnetTolerance(toler)
 marginalIntegralOfLinim(f, margin)
 \method{plot}{linearquadratcount}(x, \dots, main, add, do.plot, textargs)
@@ -227,6 +230,7 @@ qkdeEngine(x, sigma, \dots, at, what,
 LinimOp(e1, e2, op)
 LinimListOp(e1, e2, op)
 traceTessLinnet(A, L, epsfrac)
+mapLinnetToLine(L)
 
 }
 \details{

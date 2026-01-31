@@ -17,26 +17,52 @@ persp.linim <- local({
   
   persp.linim <- function(x, ..., main, grid=TRUE, ngrid=10,
                           col.grid="grey", col.base="white",
-                          neg.args=list(), warncross=FALSE) {
+                          neg.args=list(), warncross=FALSE,
+                          zadjust=1,
+                          extrapolate=c("linear", "constant")) {
     xname <- short.deparse(substitute(x))
     if(missing(main)) main <- xname
     dotargs <- list(...)
+    extrapolate <- match.arg(extrapolate)
     #' 
     L <- as.linnet(x)
     R <- Frame(L)
+    #' rescale function values to a scale commensurate with window
+    #'  (to achieve appropriate default scale in persp.default)
+    xmax <- max(abs(x))
+    if(rescaled <- (xmax > .Machine$double.eps)) {
+      scal <- max(sidelengths(R))/xmax
+      x    <- scal * x
+    }
     zlim <- range(x, 0)
     #' set up perspective transformation and plot horizontal plane
-    Z <- as.im(0, W=R, dimyx=ngrid)
-    col.grid.used <- if(grid && (zlim[1] >= 0)) col.grid else NA
-    argh <- resolve.defaults(list(x=Z, main=main,
-                                  border=col.grid.used,
-                                  col=col.base),
+    if(is.im(col.base)) {
+      #' Horizontal plane will be painted by a colour image
+      if(!is.subset.owin(Window(x), Window(col.base)))
+        Window(x) <- boundingbox(Window(x), Window(col.base))
+      Z <- 0 * col.base
+      BaseInfo <- list(colin=col.base)
+    } else if(is.colour(col.base)) {
+      #' Usual case: horizontal plane will be a single colour
+      Z <- as.im(0, W=R, dimyx=rev(ngrid))
+      #' Draw grid lines by setting 'border' argument of persp.default
+      #' provided the function has no negative values
+      border <- if(grid && (zlim[1] >= 0)) col.grid else NA
+      BaseInfo <- list(col=col.base, border=border)
+    } else {
+      stop("Argument col.base should be a single colour or a pixel image",
+           call.=FALSE)
+    }
+    argh <- resolve.defaults(list(x=quote(Z), main=main),
+                             BaseInfo,
                              dotargs,
                              list(axes=FALSE, box=FALSE,
-                                  zlim=zlim, zlab=xname, 
-                                  scale=TRUE, expand=0.1))
+                                  zlim=zlim, zlab=xname,
+                                  scale=!rescaled,
+                                  #' expand=0.1 is default in persp.default
+                                  expand=zadjust * 0.1))
     M <- do.call.matched(persp.im, argh,
-                         funargs=graphicsPars("persp"))
+                         extrargs=graphicsPars("persp"))
     #' compute the projection of the linear network
     S <- as.psp(L)
     E <- S$ends
@@ -56,16 +82,25 @@ persp.linim <- local({
     }
     #' extract function data
     df <- attr(x, "df")
-    #' handle negative values separately if a grid is shown
-    if(grid && zlim[1] < 0) {
+    #' handle negative values separately
+    if(zlim[1L] < 0) {
+      #' split function into positive and negative parts
       dfneg <- df
       dfneg$values <- pmin(0, df$values)
       df$values    <- pmax(0, df$values)
-      #' plot negative part
-      neg.args <- resolve.defaults(neg.args, dotargs)
-      spectiveWalls(dfneg, segmentsequence, E, M, neg.args)
-      #' plot baseline grid on top again
-      spectiveGrid(R, ngrid, M, col=col.grid)
+      if(is.im(col.base)) {
+        warning(paste("Negative function values will be obscured",
+                      "by colour image col.base"),
+                call.=FALSE)
+      } else {
+        #' plot negative part of function
+        neg.args <- resolve.defaults(neg.args, dotargs)
+        spectiveWalls(dfneg, segmentsequence, E, M, neg.args, extrapolate)
+      }
+      if(grid) {
+        #' plot baseline grid on horizontal plane
+        spectiveGrid(R, ngrid, M, col=col.grid)
+      }
     }
     #' plot network
     do.call.matched(segments,
@@ -73,10 +108,10 @@ persp.linim <- local({
                          y0=x0y0$y,
                          x1=x1y1$x,
                          y1=x1y1$y, ...))
-    #' plot function above grid (or entire function if no grid)
-    spectiveWalls(df, segmentsequence, E, M, dotargs)
+    #' plot function above base plane
+    spectiveWalls(df, segmentsequence, E, M, dotargs, extrapolate)
     #'   
-    invisible(M)
+    return(invisible(M))
   }
 
   trans3dz <- function(x,y,z,pmat) {
@@ -86,7 +121,10 @@ persp.linim <- local({
          z = tr[, 3]/tr[, 4])
   }
 
-  spectiveWalls <- function(df, segmentsequence, E, M, pargs) {
+  spectiveWalls <- function(df, segmentsequence, E, M, pargs,
+                            extrapolate=c("linear", "constant")) {
+    extrapolate <- match.arg(extrapolate)
+    shoot <- (extrapolate == "linear")
     #' split by segment
     for(i in segmentsequence) {
       dfi <- df[df$mapXY == i, , drop=FALSE]
@@ -94,11 +132,28 @@ persp.linim <- local({
         #' order by position along segment
         ord <- order(dfi$tp)
         dfi <- dfi[ord, , drop=FALSE]
-        #' extrapolate to segment endpoints
+        #' extrapolate to segment endpoints 
         Ei <- E[i,, drop=FALSE]
         xx <- c(Ei$x0, dfi$x, Ei$x1)
         yy <- c(Ei$y0, dfi$y, Ei$y1)
         zz <- with(dfi, c(values[1], values, values[nn]))
+        ##
+        if(shoot && nn > 1) {
+          ## linear extrapolation
+          last <- nn + 2L
+          if(abs(xx[last] - xx[1L]) > abs(yy[last] - yy[1L])) {
+            tp <- (xx - xx[1L])/(xx[last] - xx[1L])
+          } else {
+            tp <- (yy - yy[1L])/(yy[last] - yy[1L])
+          }
+          if(all(is.finite(tp))) {
+            zz[1] <- zz[2L] - tp[2L] * (zz[3L]-zz[2L])/(tp[3L]-tp[2L])
+            pen1 <- last - 1L
+            pen2 <- last - 2L
+            zz[last] <- zz[pen1] +
+              (1-tp[pen1]) * (zz[pen1]-zz[pen2])/(tp[pen1]-tp[pen2])
+          }
+        }
         #' make polygon in 3D      
         xx <- c(xx, rev(xx))
         yy <- c(yy, rev(yy))

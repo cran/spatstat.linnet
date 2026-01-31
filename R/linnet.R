@@ -3,7 +3,7 @@
 #    
 #    Linear networks
 #
-#    $Revision: 1.97 $    $Date: 2025/11/23 06:47:21 $
+#    $Revision: 1.105 $    $Date: 2026/01/14 02:30:41 $
 #
 # An object of class 'linnet' defines a linear network.
 # It includes the following components
@@ -222,6 +222,7 @@ plot.linnet <- function(x, ..., main=NULL, add=FALSE,
   argh <- list(...)
   lines <- as.psp(x)
   if(show.vertices) vert <- vertices(x)
+  #' ..........................................................
   #' plan layout and save symbolmaps
   RS <- do.call(plot,
                resolve.defaults(list(x=quote(lines),
@@ -245,34 +246,38 @@ plot.linnet <- function(x, ..., main=NULL, add=FALSE,
   } else {
     RV <- NULL
   }
-  ## initialise plot
-  if(!add) {
-    args.main <- argh[names(argh) %in% c("cex.main", "adj.main", "col")]
-    do.call(plot, append(list(x=quote(B), type="n", main=main),
-                         args.main))
-  }
-  ## plot segments and (optionally) vertices
-  do.call(plot,
-          resolve.defaults(list(x=quote(lines),
-                                add=TRUE,
-                                show.window=show.window,
-                                show.all=TRUE, 
-                                main="",
-                                multiplot=FALSE),
-                           args.segments,
-                           list(...),
-                           list(use.marks=FALSE, legend=FALSE)))
-  if(show.vertices) {
+  #' ---------------- actual plotting ------------------------
+  if(do.plot) {
+    ## initialise plot
+    if(!add) {
+      args.main <- argh[names(argh) %in% c("cex.main", "adj.main", "col")]
+      do.call(plot, append(list(x=quote(B), type="n", main=main),
+                           args.main))
+    }
+    ## plot segments and (optionally) vertices
     do.call(plot,
-            resolve.defaults(list(x=quote(vert),
+            resolve.defaults(list(x=quote(lines),
                                   add=TRUE,
-                                  show.window=FALSE,
-                                  show.all=TRUE,
-                                  main=""),
-                             args.vertices,
+                                  show.window=show.window,
+                                  show.all=TRUE, 
+                                  main="",
+                                  multiplot=FALSE),
+                             args.segments,
                              list(...),
                              list(use.marks=FALSE, legend=FALSE)))
+    if(show.vertices) {
+      do.call(plot,
+              resolve.defaults(list(x=quote(vert),
+                                    add=TRUE,
+                                    show.window=FALSE,
+                                    show.all=TRUE,
+                                    main=""),
+                               args.vertices,
+                               list(...),
+                               list(use.marks=FALSE, legend=FALSE)))
+    }
   }
+  #' --------- return colour maps and layout ----------------------
   result <- list(segments=RS, vertices=RV)
   attr(result, "bbox") <- B
   return(invisible(result))
@@ -388,10 +393,15 @@ as.linnet.psp <- function(X, ..., eps, sparse=FALSE, chop=TRUE, fuse=TRUE) {
       stopifnot(eps >= 0)
     }
     if(eps > 0 && minnndist(V) <= eps) {
+      #' divide into clusters of close pairs
       gV <- marks(connected(V, eps))
+      #' centroid of each cluster
       xx <- as.numeric(by(V$x, gV, mean))
       yy <- as.numeric(by(V$y, gV, mean))
-      V <- ppp(xx, yy, window=Window(X))
+      Vmean <- ppp(xx, yy, window=Frame(X))
+      #' data point closest to centroid (ensures it's inside window)
+      kk <- nncross(Vmean, V, what="which")
+      V <- V[kk]
     }
     first  <- endpoints.psp(X, "first")
     second <- endpoints.psp(X, "second")
@@ -679,8 +689,7 @@ connected.linnet <- function(X, ..., what=c("labels", "components")) {
   verifyclass(X, "linnet")
   what <- match.arg(what)
   nv <- npoints(vertices(X))
-  lab0 <- cocoEngine(nv, X$from - 1L, X$to - 1L, "connected.linnet")
-  lab <- lab0 + 1L
+  lab <- cocoLabels(nv, X$from, X$to, "connected.linnet")
   lab <- factor(as.integer(factor(lab)))
   if(what == "labels")
     return(lab)
@@ -765,3 +774,43 @@ identify.linnet <- function(x, ...) {
   }
   identify(as.psp(x), ...)
 }
+
+threads <- function(X, what=c("tessellation", "labels")) {
+  verifyclass(X, "linnet")
+  what <- match.arg(what)
+  ## identify which vertices are just a 'bend' in the road
+  bend <- (vertexdegree(X) == 2)
+  ## assemble all (segment, vertex) pairs where vertex is endpoint of segment
+  seg <- seq_len(nsegments(X))
+  seg <- c(seg, seg)
+  ver <- c(X$from, X$to)
+  ## retain only those (segment, vertex) where vertex is a 'bend'
+  ok <- bend[ver]
+  seg <- seg[ok]
+  ver <- ver[ok]
+  ## match (segment, vertex) pairs which have the same vertex
+  second <- which(duplicated(ver))
+  first <- uniquemap(ver)[second]
+  ## extract corresponding edges
+  a <- seg[first]
+  b <- seg[second]
+  ## Thus edges a[j], b[j] share a common vertex of degree 2, for each j
+  ## Identify equivalence classes
+  lab <- cocoLabels(nsegments(X), a, b, "threads algorithm")
+  lab <- as.factor(lab)
+  ##
+  switch(what,
+         labels = {
+           result <- lab
+         },
+         tessellation = {
+           df <- data.frame(seg=seq_len(nsegments(X)),
+                            t0=0,
+                            t1=1,
+                            tile=lab)
+           result <- lintess(X, df)
+         })
+  return(result)
+}
+  
+           
