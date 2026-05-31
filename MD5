@@ -1,6 +1,6 @@
-27cbc82a0fbdd101cfa68d93df177925 *DESCRIPTION
-4775418b451ef82e0ea52f616de4a94e *NAMESPACE
-bca5304eff0b57a88668c83adb2df160 *NEWS
+b05ee234212b077739e5acd837d6bac0 *DESCRIPTION
+cd30dbe996d59ad721985b362fa2bd60 *NAMESPACE
+f6104661379154c63443dd3c76c91eee *NEWS
 4e2027728562a7df69a9558edfe5e958 *R/First.R
 996cc7d569033ee3b57e55ae3424c136 *R/Math.linim.R
 1fc702e828ad0fc7d13f01cc45f69d5d *R/Math.linimlist.R
@@ -43,7 +43,7 @@ b4c24b849234a090c4ee07369765035d *R/lintess.R
 5e4bb994028b00bb63908933e4bc7a36 *R/lintessmakers.R
 cd9f1604c89c7a26d9713dae52dddd4d *R/lixellate.R
 12d6a2a13cc5caf60f1b8327553d6c02 *R/lpp.R
-24df42bb6083ccdcf4fb2c52979b6174 *R/lppm.R
+80885f95733677c1964909058676d620 *R/lppm.R
 4e037733d3adb5dd15349e23fac6ac59 *R/lurklppm.R
 6c5ed7cba0a5d3adc1d916d0483375db *R/nndistlpp.R
 409c82831a42208e5e97176c43f5053c *R/nnfromvertex.R
@@ -68,10 +68,10 @@ e6b7c882fda62bbab129f43c35909315 *R/shortestpath.R
 5028969a6d80e24270a27f4ffc2585be *R/subsetlpp.R
 b3c3d90d017e1fb9830bb9e20b76b07e *R/treebranches.R
 c322eb0238ba8347d3ac1238ce736ed1 *R/unstacklpp.R
-f51ba7c8bc94d8cf1fd072b85c6e53ab *build/partial.rdb
+533839446f70bde34a1050627ce80586 *build/partial.rdb
 f2d49fc8f50fef7f76bcb3fc7f34efb4 *inst/CITATION
-cff5394e2da1f6901b89e5200ed40839 *inst/doc/packagesizes.txt
-cff5394e2da1f6901b89e5200ed40839 *inst/info/packagesizes.txt
+7d2a0f656f2dbda8aec631a8e45299b7 *inst/doc/packagesizes.txt
+7d2a0f656f2dbda8aec631a8e45299b7 *inst/info/packagesizes.txt
 12e68895fef0d3aa0bde45a0ddbadfa4 *inst/ratfor/Makefile
 22e8a5189942ba190c13475b35459c7f *inst/ratfor/dppll.r
 6d471ec061ea91398ba16323de56b9db *inst/ratfor/inxypOld.r
@@ -137,6 +137,7 @@ ef043de4d7f004017bf23760ab9aa7ad *man/harmonise.linim.Rd
 ff5f99f553da23bfaf7994e3d9188f0d *man/insertVertices.Rd
 bfc01a2389709026bb112e9ba9e24bd8 *man/integral.linim.Rd
 57ee115cd7059a7395aebaa5d12cec2d *man/intensity.lpp.Rd
+307a7daa8771bfd21363e4c9394c7b7c *man/intensity.lppm.Rd
 a69abfea5c5142d18d0e8acd4ca0881e *man/intersect.lintess.Rd
 da6a99ec17f6bc316e40dc5debd2217c *man/is.connected.linnet.Rd
 a1ef9c24b08b77165b53e8227c546ce3 *man/is.marked.lppm.Rd
@@ -176,7 +177,7 @@ cc314c90ddb3ebc15144776d5d532b6e *man/lixellate.Rd
 cffc8689763b4a0d923ad43c0378226c *man/lpp.Rd
 2fa83d6eda14bbdc76b5baf48361e69b *man/lppm.Rd
 4dc0747f3df86f86cc8b89c4a55c8d03 *man/lurking.lppm.Rd
-419151e467652958b1415ce40d88e827 *man/macros/defns.Rd
+0ff8a0c7a7247b3896de477dcf1eedc3 *man/macros/defns.Rd
 71cededb6b68746d3a6ae14a9da242f2 *man/marks.linnet.Rd
 81c2ba46236a30c810c8e99aa81ce505 *man/marks.lintess.Rd
 985eff8cdc047536acf0bb226ed306f6 *man/mean.linim.Rd
@@ -213,7 +214,7 @@ b903b47a4cec5a31db0a5c0337beecfc *man/quadrat.test.lpp.Rd
 c1335c8441aad05fd153fac66d29dd2e *man/rSwitzerlpp.Rd
 1de91283f963d02845dcf152854ecaa1 *man/rThomaslpp.Rd
 45094b198c6d7cae07eb1efe75cdd610 *man/rcelllpp.Rd
-bd411a811529fc49c854b7d3180fcdb6 *man/relrisk.lpp.Rd
+c613c7244a00d9fb2e248685f4830291 *man/relrisk.lpp.Rd
 b1b0c94ffacfa5a7eb705e05d0ee02f4 *man/repairNetwork.Rd
 f4eb1f82cd8677125349c08bd20a7d97 *man/residuals.lppm.Rd
 2a6e57c16acc9d35571e633c55606ac1 *man/rhohat.lpp.Rd
@@ -226,7 +227,7 @@ aa8a448cd8f8408eefc7471a3f346558 *man/roc.lpp.Rd
 94b9b58b5bc4e52853475556799a1bd0 *man/shortestpath.Rd
 f5739b9989f0d0f62207a1051ff9074e *man/simulate.lppm.Rd
 50fe4582a3c53ce6e16df691c6dbfe6e *man/spatstat.linnet-deprecated.Rd
-1a5eee127d039987e9e6e8b3f4f960b9 *man/spatstat.linnet-internal.Rd
+065c949c0c92d684c1752832bb578e6b *man/spatstat.linnet-internal.Rd
 7a60ad38b3b435458e1979b45926ad86 *man/spatstat.linnet-package.Rd
 b562e7dc79c1e5ecbe54e4840e4976b5 *man/subset.lpp.Rd
 ca3d2d648e572d9ff7d8dc2c4533a069 *man/superimpose.lpp.Rd
@@ -268,4 +269,4 @@ d4b735208d8b70140fb0f0d6c88c8751 *src/linvknndist.c
 5c127a9d5ddeaee8cc8f34b32218a3a5 *src/yesno.h
 dd3c1f0c493466fbfa9a1d2c245d753f *tests/testsAtoK.R
 52700766d39b66daa1622a0f8565e766 *tests/testsL.R
-393db8ddba72c429a0f55fd1a402e979 *tests/testsMtoZ.R
+a26c06fa6022a8c11a8621152766c5ed *tests/testsMtoZ.R
