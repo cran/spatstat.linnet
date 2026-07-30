@@ -1,6 +1,6 @@
-b05ee234212b077739e5acd837d6bac0 *DESCRIPTION
-cd30dbe996d59ad721985b362fa2bd60 *NAMESPACE
-f6104661379154c63443dd3c76c91eee *NEWS
+b4e47ad8573004ad19afa2046c532936 *DESCRIPTION
+388334275ad653b1a57112a1b8c40e8c *NAMESPACE
+a12457b84f7ac164250669a00838d88b *NEWS
 4e2027728562a7df69a9558edfe5e958 *R/First.R
 996cc7d569033ee3b57e55ae3424c136 *R/Math.linim.R
 1fc702e828ad0fc7d13f01cc45f69d5d *R/Math.linimlist.R
@@ -45,7 +45,7 @@ cd9f1604c89c7a26d9713dae52dddd4d *R/lixellate.R
 12d6a2a13cc5caf60f1b8327553d6c02 *R/lpp.R
 80885f95733677c1964909058676d620 *R/lppm.R
 4e037733d3adb5dd15349e23fac6ac59 *R/lurklppm.R
-6c5ed7cba0a5d3adc1d916d0483375db *R/nndistlpp.R
+df683382b45f8982260a8f6bac56be77 *R/nndistlpp.R
 409c82831a42208e5e97176c43f5053c *R/nnfromvertex.R
 7c991b3e96c24ed6e67e8e55d7d7e7df *R/nnfunlpp.R
 aedc35710b3d05bf2f7e3d1005b64706 *R/pairdistlpp.R
@@ -59,7 +59,7 @@ f7490c0c89689664f84276d531b2ccc4 *R/randomlpp.R
 7bceda3656d8009808c3506528f2f04d *R/rcelllpp.R
 bf6017983bb2c1d089d3250028b0ce1b *R/relrisk.lpp.R
 8e89bbd8d383574eccede17711c92e72 *R/resolve.lambdalpp.R
-322332c967c85047e2c6ef19ef733ce4 *R/rhohatlpp.R
+7288112bae8ca84a4f1873a7895a7cd5 *R/rhohatlpp.R
 ed68610eac21110e3719d314acbf99d9 *R/roclpp.R
 0f65cdccd7beae81f6103f752e29f652 *R/sdr.R
 e6b7c882fda62bbab129f43c35909315 *R/shortestpath.R
@@ -68,10 +68,10 @@ e6b7c882fda62bbab129f43c35909315 *R/shortestpath.R
 5028969a6d80e24270a27f4ffc2585be *R/subsetlpp.R
 b3c3d90d017e1fb9830bb9e20b76b07e *R/treebranches.R
 c322eb0238ba8347d3ac1238ce736ed1 *R/unstacklpp.R
-533839446f70bde34a1050627ce80586 *build/partial.rdb
+21c9401b8c07f38d762ade4612fc4ffe *build/partial.rdb
 f2d49fc8f50fef7f76bcb3fc7f34efb4 *inst/CITATION
-7d2a0f656f2dbda8aec631a8e45299b7 *inst/doc/packagesizes.txt
-7d2a0f656f2dbda8aec631a8e45299b7 *inst/info/packagesizes.txt
+924b23b912154f11ec6b1dbbca272f78 *inst/doc/packagesizes.txt
+924b23b912154f11ec6b1dbbca272f78 *inst/info/packagesizes.txt
 12e68895fef0d3aa0bde45a0ddbadfa4 *inst/ratfor/Makefile
 22e8a5189942ba190c13475b35459c7f *inst/ratfor/dppll.r
 6d471ec061ea91398ba16323de56b9db *inst/ratfor/inxypOld.r
@@ -100,7 +100,7 @@ eabd2436798b6d28f2a2ade987e1d907 *man/branchlabelfun.Rd
 a5ecd18b123d38ddfb768bb94d0586be *man/bw.lppl.Rd
 5efa421a530a5f4fecf2b4a9f6836aed *man/bw.relrisk.lpp.Rd
 43f3dc349c86664bf89c156b1b3026f5 *man/bw.voronoi.Rd
-2d6aaad1a775ce17cd74302f5f5b8d2e *man/cdf.test.lpp.Rd
+a5f7d0f8acc56d7de0e0396ddd9755fe *man/cdf.test.lpp.Rd
 92a613ae8b74fa1d56d91450c5f90186 *man/chop.linnet.Rd
 bc3a94103403a71a2f9da90295679ef3 *man/clickjoin.Rd
 68abca9743b558676adf54e76ea2a5ab *man/clicklpp.Rd
@@ -121,6 +121,7 @@ be4c82e26d3cc3128bc7c3deea9376f6 *man/density.lpp.Rd
 dbe98821ba1db041e336dccebe539697 *man/densityfun.lpp.Rd
 bc607140c41c0b1c3dcec734a837c096 *man/diagnose.lppm.Rd
 e1b99024f072f6984aebb23ce2161f1f *man/diameter.linnet.Rd
+430960a272d0b49df2ac72c361e20f44 *man/distbdry.lpp.Rd
 a5fb51463c7e5d0d500e61f5f6f36b01 *man/distfun.lpp.Rd
 b753d3781439d919c13c8567ceb9ed79 *man/distmap.lpp.Rd
 3ada52c1f6edd323160b889e87f0c6af *man/divide.linnet.Rd
@@ -177,14 +178,14 @@ cc314c90ddb3ebc15144776d5d532b6e *man/lixellate.Rd
 cffc8689763b4a0d923ad43c0378226c *man/lpp.Rd
 2fa83d6eda14bbdc76b5baf48361e69b *man/lppm.Rd
 4dc0747f3df86f86cc8b89c4a55c8d03 *man/lurking.lppm.Rd
-0ff8a0c7a7247b3896de477dcf1eedc3 *man/macros/defns.Rd
+f27d958a624c9d428a5cf6a27e436d23 *man/macros/defns.Rd
 71cededb6b68746d3a6ae14a9da242f2 *man/marks.linnet.Rd
 81c2ba46236a30c810c8e99aa81ce505 *man/marks.lintess.Rd
 985eff8cdc047536acf0bb226ed306f6 *man/mean.linim.Rd
 dffa6adbb1aa4167adf3c426c56e90ff *man/mergeTiles.lintess.Rd
 86310b7f22610648376422f758bff751 *man/methods.linfun.Rd
 7fbb34480533288246f4cc98bfaf40e3 *man/methods.linim.Rd
-d22c1149727ed3d68b97e87ed8098c01 *man/methods.linnet.Rd
+35b9abd5c0f0d0b30528627339cf4e19 *man/methods.linnet.Rd
 8cd172eb36d13da844a8b1a1062d73e0 *man/methods.lpp.Rd
 dc7348c86d145770d504d0c894182bab *man/methods.lppm.Rd
 cda5e7a5a8662d476724793a67aa4d08 *man/model.frame.lppm.Rd
@@ -217,7 +218,7 @@ c1335c8441aad05fd153fac66d29dd2e *man/rSwitzerlpp.Rd
 c613c7244a00d9fb2e248685f4830291 *man/relrisk.lpp.Rd
 b1b0c94ffacfa5a7eb705e05d0ee02f4 *man/repairNetwork.Rd
 f4eb1f82cd8677125349c08bd20a7d97 *man/residuals.lppm.Rd
-2a6e57c16acc9d35571e633c55606ac1 *man/rhohat.lpp.Rd
+df6500d4c130bf552fc7253e31f22060 *man/rhohat.lpp.Rd
 5788aa56ff50344e253d10dc73581300 *man/rjitter.lpp.Rd
 caa42e6ffd8586b5e3dd71364b954a04 *man/rlpp.Rd
 aa8a448cd8f8408eefc7471a3f346558 *man/roc.lpp.Rd
@@ -269,4 +270,4 @@ d4b735208d8b70140fb0f0d6c88c8751 *src/linvknndist.c
 5c127a9d5ddeaee8cc8f34b32218a3a5 *src/yesno.h
 dd3c1f0c493466fbfa9a1d2c245d753f *tests/testsAtoK.R
 52700766d39b66daa1622a0f8565e766 *tests/testsL.R
-a26c06fa6022a8c11a8621152766c5ed *tests/testsMtoZ.R
+e42af37bdc685cdb7cba5b2c7530c723 *tests/testsMtoZ.R

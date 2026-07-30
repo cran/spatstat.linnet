@@ -1,4 +1,28 @@
 
+        CHANGES IN spatstat.linnet VERSION 3.5-3
+
+OVERVIEW
+
+    o Fix documentation to satisfy CRAN.
+
+
+        CHANGES IN spatstat.linnet VERSION 3.5-2
+
+OVERVIEW
+
+    o Minor additions and improvements.
+
+NEW FUNCTIONS
+
+    o distbdry.lpp
+    Distance from each data point to the nearest terminal vertex.
+    
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o rhohat.lpp, rhohat.lppm
+    Methods for 'rhohat' now recognise the argument 'delta'
+    as an alternative to argument 'breaks' when smoother="piecewise".
+    
         CHANGES IN spatstat.linnet VERSION 3.5-1
 
 OVERVIEW
