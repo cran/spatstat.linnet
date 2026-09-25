@@ -1,4 +1,30 @@
 
+        CHANGES IN spatstat.linnet VERSION 3.5-4
+
+OVERVIEW
+
+    o Transect of an image on a network.
+
+    o Transect of a function on a network.
+
+    o Extensions to relrisk.lpp
+    
+NEW FUNCTIONS
+
+    o transect.linim
+    Transect of a pixel image on a network, along a path in the network.
+    
+    o transect.linfun
+    Transect of a function on a network, along a path in the network.
+    
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o relrisk.lpp
+    Now handles a point pattern with multiple columns of marks.
+
+    o relrisk.lpp
+    New arguments 'weights' and 'normalise'.
+
         CHANGES IN spatstat.linnet VERSION 3.5-3
 
 OVERVIEW
